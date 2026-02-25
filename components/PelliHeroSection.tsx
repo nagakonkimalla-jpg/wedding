@@ -1,275 +1,182 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { EventInfo } from "@/types";
 
 interface HeroSectionProps {
     event: EventInfo;
 }
 
-// Ornamental corner piece SVG — traditional Indian L-shaped flourishes
-function OrnamentalFrame() {
-    return (
-        <div className="absolute inset-6 sm:inset-10 md:inset-16 z-20 pointer-events-none">
-            {/* Top-left corner */}
-            <svg className="absolute top-0 left-0 w-16 h-16 sm:w-24 sm:h-24" viewBox="0 0 100 100">
-                <path d="M0 40 Q0 0 40 0 L50 0 Q20 5 10 20 Q5 30 0 50 Z" fill="#D4A017" opacity="0.4" />
-                <path d="M0 55 Q0 0 55 0" stroke="#D4A017" strokeWidth="0.8" fill="none" opacity="0.4" />
-                <path d="M0 35 Q5 10 35 0" stroke="#D4A017" strokeWidth="1" fill="none" opacity="0.5" />
-                <circle cx="18" cy="18" r="2" fill="#D4A017" opacity="0.4" />
-                <path d="M5 28 Q10 15 28 5" stroke="#D4A017" strokeWidth="0.5" fill="none" opacity="0.3" />
-                {/* Ornate curl flourish */}
-                <path d="M42 0 Q35 8 38 16 Q40 22 34 24" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-                <path d="M0 42 Q8 35 16 38 Q22 40 24 34" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-            </svg>
-            {/* Top-right (mirrored) */}
-            <svg className="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24" viewBox="0 0 100 100" style={{ transform: "scaleX(-1)" }}>
-                <path d="M0 40 Q0 0 40 0 L50 0 Q20 5 10 20 Q5 30 0 50 Z" fill="#D4A017" opacity="0.4" />
-                <path d="M0 55 Q0 0 55 0" stroke="#D4A017" strokeWidth="0.8" fill="none" opacity="0.4" />
-                <path d="M0 35 Q5 10 35 0" stroke="#D4A017" strokeWidth="1" fill="none" opacity="0.5" />
-                <circle cx="18" cy="18" r="2" fill="#D4A017" opacity="0.4" />
-                <path d="M5 28 Q10 15 28 5" stroke="#D4A017" strokeWidth="0.5" fill="none" opacity="0.3" />
-                <path d="M42 0 Q35 8 38 16 Q40 22 34 24" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-                <path d="M0 42 Q8 35 16 38 Q22 40 24 34" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-            </svg>
-            {/* Bottom-left */}
-            <svg className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 sm:h-24" viewBox="0 0 100 100" style={{ transform: "scaleY(-1)" }}>
-                <path d="M0 40 Q0 0 40 0 L50 0 Q20 5 10 20 Q5 30 0 50 Z" fill="#D4A017" opacity="0.4" />
-                <path d="M0 55 Q0 0 55 0" stroke="#D4A017" strokeWidth="0.8" fill="none" opacity="0.4" />
-                <path d="M0 35 Q5 10 35 0" stroke="#D4A017" strokeWidth="1" fill="none" opacity="0.5" />
-                <circle cx="18" cy="18" r="2" fill="#D4A017" opacity="0.4" />
-                <path d="M5 28 Q10 15 28 5" stroke="#D4A017" strokeWidth="0.5" fill="none" opacity="0.3" />
-                <path d="M42 0 Q35 8 38 16 Q40 22 34 24" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-                <path d="M0 42 Q8 35 16 38 Q22 40 24 34" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-            </svg>
-            {/* Bottom-right */}
-            <svg className="absolute bottom-0 right-0 w-16 h-16 sm:w-24 sm:h-24" viewBox="0 0 100 100" style={{ transform: "scale(-1)" }}>
-                <path d="M0 40 Q0 0 40 0 L50 0 Q20 5 10 20 Q5 30 0 50 Z" fill="#D4A017" opacity="0.4" />
-                <path d="M0 55 Q0 0 55 0" stroke="#D4A017" strokeWidth="0.8" fill="none" opacity="0.4" />
-                <path d="M0 35 Q5 10 35 0" stroke="#D4A017" strokeWidth="1" fill="none" opacity="0.5" />
-                <circle cx="18" cy="18" r="2" fill="#D4A017" opacity="0.4" />
-                <path d="M5 28 Q10 15 28 5" stroke="#D4A017" strokeWidth="0.5" fill="none" opacity="0.3" />
-                <path d="M42 0 Q35 8 38 16 Q40 22 34 24" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-                <path d="M0 42 Q8 35 16 38 Q22 40 24 34" stroke="#D4A017" strokeWidth="0.6" fill="none" opacity="0.4" />
-            </svg>
-            {/* Connecting border lines with subtle dotted feel */}
-            <div className="absolute top-0 left-16 right-16 sm:left-24 sm:right-24 h-px bg-[#D4A017]/20" />
-            <div className="absolute bottom-0 left-16 right-16 sm:left-24 sm:right-24 h-px bg-[#D4A017]/20" />
-            <div className="absolute left-0 top-16 bottom-16 sm:top-24 sm:bottom-24 w-px bg-[#D4A017]/20" />
-            <div className="absolute right-0 top-16 bottom-16 sm:top-24 sm:bottom-24 w-px bg-[#D4A017]/20" />
-        </div>
-    );
-}
-
-// Floating hero decorations — event-specific animated SVG elements
-function HeroDecorations() {
-    return (
-        <>
-            {/* Traditional kalash — auspicious pot */}
-            <svg className="absolute top-[12%] left-[8%] w-10 h-10 sm:w-14 sm:h-14 opacity-30" viewBox="0 0 40 40" style={{ animation: "hero-float-1 6s ease-in-out infinite" }}>
-                <path d="M14 24 Q13 32 16 34 Q19 36 21 36 Q23 36 26 34 Q29 32 28 24" fill="#C5A028" opacity="0.6" />
-                <ellipse cx="20" cy="24" rx="8" ry="2.5" fill="#C5A028" opacity="0.7" />
-                <circle cx="20" cy="20" r="4" fill="#C5A028" opacity="0.55" />
-                <path d="M17 24 Q14 16 16 12" stroke="#C5A028" strokeWidth="0.8" fill="none" opacity="0.5" />
-                <path d="M23 24 Q26 16 24 12" stroke="#C5A028" strokeWidth="0.8" fill="none" opacity="0.5" />
-            </svg>
-            {/* Paired paisley — traditional union symbol */}
-            <svg className="absolute top-[22%] right-[10%] w-10 h-10 sm:w-14 sm:h-14 opacity-25" viewBox="0 0 50 40" style={{ animation: "hero-float-2 8s ease-in-out infinite" }}>
-                <path d="M15 5 Q28 8 25 20 Q22 30 12 28 Q4 26 6 16 Q8 5 15 5Z" fill="none" stroke="#C5A028" strokeWidth="1" opacity="0.7" />
-                <path d="M35 5 Q22 8 25 20 Q28 30 38 28 Q46 26 44 16 Q42 5 35 5Z" fill="none" stroke="#C5A028" strokeWidth="1" opacity="0.7" />
-                <circle cx="14" cy="18" r="2" fill="#C5A028" opacity="0.5" />
-                <circle cx="36" cy="18" r="2" fill="#C5A028" opacity="0.5" />
-            </svg>
-            {/* Mangalsutra pendant */}
-            <svg className="absolute bottom-[30%] left-[20%] w-7 h-7 sm:w-9 sm:h-9 opacity-40" viewBox="0 0 40 40" style={{ animation: "hero-sparkle 2s ease-in-out infinite 0.5s" }}>
-                <path d="M10 18 Q10 14 14 14 L26 14 Q30 14 30 18" stroke="#C5A028" strokeWidth="1" fill="none" opacity="0.6" />
-                <path d="M18 18 L20 26 L22 18" fill="#C5A028" opacity="0.7" />
-                <circle cx="20" cy="28" r="3" fill="#8B1A1A" opacity="0.6" />
-                <circle cx="14" cy="16" r="1.5" fill="#8B1A1A" opacity="0.7" />
-                <circle cx="26" cy="16" r="1.5" fill="#8B1A1A" opacity="0.7" />
-            </svg>
-            {/* Traditional lotus */}
-            <svg className="absolute bottom-[36%] right-[16%] w-9 h-9 sm:w-12 sm:h-12 opacity-25" viewBox="0 0 40 40" style={{ animation: "hero-float-3 5s ease-in-out infinite" }}>
-                {[-30, -10, 10, 30].map((angle) => (
-                    <path key={angle} d="M20 22 Q18 14 20 7 Q22 14 20 22" fill="#8B1A1A" opacity="0.5" transform={`rotate(${angle} 20 22)`} />
-                ))}
-                <path d="M20 22 Q12 20 6 24 Q12 19 20 22" fill="#8B1A1A" opacity="0.4" />
-                <path d="M20 22 Q28 20 34 24 Q28 19 20 22" fill="#8B1A1A" opacity="0.4" />
-                <ellipse cx="20" cy="22" rx="4" ry="2.5" fill="#C5A028" opacity="0.6" />
-            </svg>
-        </>
-    );
-}
-
 export default function PelliHeroSection({ event }: HeroSectionProps) {
-    const [scrollY, setScrollY] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const prefersReducedMotion = useReducedMotion();
+    const [leftBellRinging, setLeftBellRinging] = useState(false);
+    const [rightBellRinging, setRightBellRinging] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => setScrollY(window.scrollY);
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    const playBellSound = () => {
+        const audio = new Audio('/audio/ambient_bells.ogg');
+        audio.volume = 0.5;
+        audio.play().catch(() => {});
+    };
 
-    const parallaxOffset = scrollY * 0.3;
-    const opacity = Math.max(0, 1 - scrollY / 600);
+    const handleLeftBellClick = () => {
+        if (leftBellRinging) return;
+        setLeftBellRinging(true);
+        playBellSound();
+        setTimeout(() => setLeftBellRinging(false), 1500);
+    };
+
+    const handleRightBellClick = () => {
+        if (rightBellRinging) return;
+        setRightBellRinging(true);
+        playBellSound();
+        setTimeout(() => setRightBellRinging(false), 1500);
+    };
+
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
+
+    // --- 3D Parallax Transforms ---
+    // Deep Background (moves slowly)
+    const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+
+    // Midground (bells)
+    const bellsY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
+    // (thoranam is now a fixed border via GarlandBorder)
+
+    // Center Ganesha Motif & Text (Fades and drifts up significantly)
+    const centerGroupY = useTransform(scrollYProgress, [0, 0.4], ["0%", "-60%"]);
+    const centerGroupOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+    // Apply reduced motion fallback
+    const motionBgY = prefersReducedMotion ? "0%" : bgY;
+    const motionBellsY = prefersReducedMotion ? "0%" : bellsY;
+    // motionThoranamY removed — thoranam handled by GarlandBorder
+    const motionCenterGroupY = prefersReducedMotion ? "0%" : centerGroupY;
+    const motionCenterGroupOpacity = prefersReducedMotion ? 1 : centerGroupOpacity;
 
     return (
-        <section className="relative z-[4] h-screen w-full overflow-hidden bg-[#FDFBF7]">
-            {/* Animation keyframes */}
-            <style jsx>{`
-        @keyframes hero-float-1 {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          25% { transform: translateY(-12px) translateX(4px); }
-          50% { transform: translateY(-6px) translateX(-3px); }
-          75% { transform: translateY(-14px) translateX(2px); }
-        }
-        @keyframes hero-float-2 {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          30% { transform: translateY(-8px) translateX(-5px); }
-          60% { transform: translateY(-16px) translateX(3px); }
-          80% { transform: translateY(-4px) translateX(-2px); }
-        }
-        @keyframes hero-float-3 {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          20% { transform: translateY(-10px) translateX(6px); }
-          50% { transform: translateY(-4px) translateX(-4px); }
-          70% { transform: translateY(-15px) translateX(2px); }
-        }
-        @keyframes hero-sparkle {
-          0%, 100% { opacity: 0.25; transform: scale(1); }
-          50% { opacity: 0.55; transform: scale(1.15); }
-        }
-      `}</style>
+        <section ref={containerRef} className="relative z-[4] h-[180vh] w-full bg-[var(--bg-primary)]">
+            <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
-            {/* Decorative elegant background overlay */}
-            <div className="absolute inset-0 pelli-paper-texture pointer-events-none opacity-60" />
-            <div className="absolute inset-0 pelli-watercolor-wash pointer-events-none opacity-70" />
-
-            {/* Beautiful Ivory gradient fallback */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    background: `radial-gradient(ellipse at center, transparent 30%, #FDFBF7 100%)`,
-                }}
-            />
-
-            {/* Cinematic light overlay overlay instead of dark */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#FDFBF7]/60 via-[#FDFBF7]/40 to-[#FDFBF7]/90 pointer-events-none z-[1]" />
-
-            {/* Blurred background image behind everything */}
-            <div
-                className="absolute inset-0 scale-110 blur-xl opacity-20 pointer-events-none"
-                style={{ transform: `scale(1.1) translateY(${parallaxOffset}px)` }}
-            >
-                <Image
-                    src={event.heroImage}
-                    alt="Atmosphere"
-                    fill
-                    className="object-cover"
-                    sizes="100vw"
+                {/* Background Layer: Ivory / Warm Tone */}
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] to-[#FDF5E6] pointer-events-none"
+                    style={{ y: motionBgY }}
                 />
-            </div>
 
-            {/* Ornamental frame overlay */}
-            <OrnamentalFrame />
+                {/* Corner borders removed — thoranam + garland border now frames the page */}
 
-            <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden z-[2]">
-                <HeroDecorations />
-            </div>
-
-            {/* Content with fade on scroll */}
-            <div
-                className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6"
-                style={{ opacity }}
-            >
-                {/* Watercolor Illustration Hero */}
-                <div
-                    className="relative w-[180px] h-[240px] sm:w-[220px] sm:h-[300px] md:w-[280px] md:h-[360px] mb-6 rounded-md overflow-hidden p-2 bg-white border border-[#D4A017]/30"
-                    style={{ boxShadow: "0 10px 40px rgba(212, 175, 55, 0.2), 0 0 10px rgba(0,0,0,0.05)" }}
+                {/* Brass Bells — positioned to emerge below fixed thoranam border */}
+                <motion.div
+                    className="absolute top-[50px] sm:top-[70px] md:top-[90px] left-[15%] sm:left-[20%] w-16 sm:w-24 md:w-32 opacity-90 cursor-pointer origin-top"
+                    style={{ y: motionBellsY }}
+                    onClick={handleLeftBellClick}
                 >
-                    <div className="relative w-full h-full rounded-sm overflow-hidden">
-                        <Image
-                            src="/images/hero-illustration.png"
-                            alt="Traditional Telugu Wedding Watercolor Illustration"
-                            fill
-                            className="object-cover"
-                            priority
+                    <img
+                        src="/assets/images/pelli/brass_bell.png"
+                        alt=""
+                        className={`w-full h-auto object-contain drop-shadow-xl ${leftBellRinging ? 'animate-bell-ring' : 'animate-swing'}`}
+                    />
+                </motion.div>
+                <motion.div
+                    className="absolute top-[50px] sm:top-[70px] md:top-[90px] right-[15%] sm:right-[20%] w-20 sm:w-28 md:w-36 opacity-90 cursor-pointer origin-top"
+                    style={{ y: motionBellsY }}
+                    onClick={handleRightBellClick}
+                >
+                    <img
+                        src="/assets/images/pelli/brass_bell.png"
+                        alt=""
+                        className={`w-full h-auto object-contain drop-shadow-xl ${rightBellRinging ? 'animate-bell-ring' : 'animate-swing-delayed'}`}
+                    />
+                </motion.div>
+
+                {/* Thoranam + side garlands now handled by fixed GarlandBorder component */}
+
+                {/* Layer 3: Main Traditional Content (Center Motif + Typography) */}
+                <motion.div
+                    className="relative z-10 flex flex-col items-center justify-start h-full text-center px-6 w-full max-w-4xl mx-auto pt-[110px] sm:pt-[140px] md:pt-[170px]"
+                    style={{ y: motionCenterGroupY, opacity: motionCenterGroupOpacity }}
+                >
+                    {/* Ganesha Motif */}
+                    <div className="mb-6 sm:mb-10 w-48 h-48 sm:w-64 sm:h-64 relative z-10">
+                        <img
+                            src="/images/ganesha.png"
+                            alt="Lord Ganesha"
+                            className="w-full h-full object-contain"
                         />
                     </div>
-                </div>
 
-                {/* Ornamental line above subtitle */}
-                <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 sm:w-20 h-px bg-[#D4A017]/40" />
-                    <div className="w-2 h-2 rotate-45 border border-[#D4A017]/40" />
-                    <div className="w-12 sm:w-20 h-px bg-[#D4A017]/40" />
-                </div>
+                    {/* Auspicious / Sacred Invocation */}
+                    <p className="text-sm sm:text-lg md:text-xl font-body tracking-[0.2em] uppercase text-[var(--text-primary)] mb-6 font-medium">
+                        ॥ శ్రీ విఘ్నేశ్వరాయ నమః ॥ <br />
+                        <span className="block mt-2 tracking-[0.4em] text-[var(--accent-primary)] text-xs sm:text-sm">With the blessings of elders</span>
+                    </p>
 
-                {/* Subtitle in Telugu/native script */}
-                <p
-                    className="text-lg sm:text-2xl font-body tracking-[0.3em] uppercase mb-4 text-[#B8860B]"
-                    style={{ textShadow: "0 1px 2px rgba(255,255,255,1)" }}
-                >
-                    {event.subtitle}
-                </p>
+                    {/* Main Title */}
+                    <h1 className="text-5xl sm:text-7xl md:text-8xl font-heading font-normal mb-6 leading-tight text-[var(--accent-primary)] drop-shadow-sm">
+                        {event.title}
+                    </h1>
 
-                {/* Title */}
-                <h1
-                    className="text-4xl sm:text-6xl md:text-8xl font-heading font-bold mb-2 leading-tight text-[#8B1A1A]"
-                    style={{ textShadow: "0 2px 4px rgba(255,255,255,1)" }}
-                >
-                    {event.title}
-                </h1>
+                    {/* Tagline / Subtitle */}
+                    <p className="text-2xl sm:text-4xl md:text-5xl font-script drop-shadow-sm italic" style={{ color: 'rgba(74, 28, 28, 0.9)' }}>
+                        {event.tagline}
+                    </p>
 
-                {/* Tagline in script font */}
-                <p
-                    className="text-xl sm:text-3xl md:text-4xl font-script mb-10 text-[#3D2B1F]/90"
-                    style={{ textShadow: "0 1px 2px rgba(255,255,255,1)" }}
-                >
-                    {event.tagline}
-                </p>
-
-                {/* Date & venue in elegant pill */}
-                <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-0">
-                    <div
-                        className="px-6 py-2 border rounded-full backdrop-blur-md font-body text-sm sm:text-base tracking-wide"
-                        style={{ borderColor: `#D4A01740`, backgroundColor: `rgba(253, 251, 247, 0.9)`, color: "#8B1A1A" }}
-                    >
-                        {new Date(event.date + "T00:00:00").toLocaleDateString("en-US", {
-                            weekday: "long",
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                        })}
+                    {/* Date and Time Details */}
+                    <div className="mt-12 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 opacity-90">
+                        <div className="font-body text-sm sm:text-base tracking-[0.1em] uppercase text-[var(--text-primary)]">
+                            {new Date(event.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
+                        </div>
+                        <div className="hidden sm:block w-2 h-2 rounded-full bg-[var(--accent-primary)]" />
+                        <div className="font-body text-sm sm:text-base tracking-[0.1em] uppercase text-[var(--text-primary)]">
+                            {event.time}
+                        </div>
                     </div>
-                    <div className="hidden sm:block w-8 h-px" style={{ backgroundColor: `#D4A01740` }} />
-                    <div
-                        className="px-6 py-2 border rounded-full backdrop-blur-md font-body text-sm sm:text-base tracking-wide"
-                        style={{ borderColor: `#D4A01740`, backgroundColor: `rgba(253, 251, 247, 0.9)`, color: "#8B1A1A" }}
-                    >
-                        {event.time}
+                    <div className="mt-4 font-body text-xs sm:text-sm tracking-widest uppercase" style={{ color: 'rgba(74, 28, 28, 0.8)' }}>
+                        {event.venue}
                     </div>
+                </motion.div>
+
+                {/* Secondary Layer: The "Couple" illustration fading in as scroll reveals */}
+                <motion.div
+                    className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none"
+                    style={{
+                        opacity: useTransform(scrollYProgress, [0.3, 0.6, 0.9], [0, 1, 0]),
+                        y: useTransform(scrollYProgress, [0.4, 0.8], ["10%", "-20%"])
+                    }}
+                >
+                    <div className="flex flex-col items-center p-8 sm:p-12 rounded-3xl backdrop-blur-sm shadow-xl max-w-2xl px-6" style={{ backgroundColor: 'rgba(250, 245, 233, 0.9)', border: '1px solid rgba(212, 160, 23, 0.2)' }}>
+                        <img
+                            src="/assets/images/pelli/couple.png"
+                            alt="Telugu Bride and Groom"
+                            className="w-64 h-64 sm:w-80 sm:h-80 object-contain mb-8"
+                        />
+                        <h2 className="text-3xl sm:text-4xl font-heading text-[var(--accent-primary)] text-center w-full leading-relaxed mb-4">
+                            We cordially invite you <br />to grace the auspicious occasion
+                        </h2>
+                        <div className="w-12 h-px my-4" style={{ backgroundColor: 'rgba(212, 160, 23, 0.4)' }} />
+                        <p className="text-sm sm:text-base font-body tracking-wider uppercase text-center max-w-md" style={{ color: 'rgba(74, 28, 28, 0.8)' }}>
+                            Your presence is our highest honor.
+                        </p>
+                    </div>
+                </motion.div>
+
+                {/* Scroll Indicator */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2">
+                    <span className="text-[var(--accent-primary)] text-[10px] font-body tracking-[0.3em] uppercase opacity-70">Scroll Down</span>
+                    <div className="w-[1px] h-10 bg-[var(--accent-primary)] opacity-50 animate-pulse" />
                 </div>
 
-                <div className="mt-4 font-body text-sm tracking-widest uppercase text-[#3D2B1F]/80">
-                    {event.venue} &middot; {event.venueAddress}
-                </div>
-            </div>
+                {/* Gentle Frame Overlay for that classic printed card look */}
+                <div className="absolute inset-4 sm:inset-6 md:inset-8 pointer-events-none z-50 rounded-sm" style={{ border: '1px solid rgba(212, 160, 23, 0.2)' }} />
+                <div className="absolute inset-[18px] sm:inset-[26px] md:inset-[34px] pointer-events-none z-50 rounded-sm" style={{ border: '0.5px solid rgba(212, 160, 23, 0.1)' }} />
 
-            {/* Scroll indicator */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2" style={{ opacity }}>
-                <span className="text-[#B8860B]/70 text-xs font-body tracking-[0.2em] uppercase">Scroll</span>
-                <div className="w-px h-8 bg-gradient-to-b from-[#B8860B]/70 to-transparent animate-pulse" />
             </div>
-
-            {/* Bottom gradient transition */}
-            <div
-                className="absolute bottom-0 left-0 right-0 h-40 z-10"
-                style={{
-                    background: `linear-gradient(to top, #FDFBF7, transparent)`,
-                }}
-            />
         </section>
     );
 }

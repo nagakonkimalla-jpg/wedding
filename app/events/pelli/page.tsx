@@ -14,6 +14,13 @@ export const metadata: Metadata = {
   },
 };
 
+import AmbientAudio from "@/components/AmbientAudio";
+
 export default function PelliPage() {
-  return <PelliEventPage event={event} />;
+  return (
+    <main data-theme="pelli" className="min-h-screen bg-(--bg-primary) text-(--text-primary)">
+      <AmbientAudio audioPath="/audio/pelli_song.mp3" startTime={40} />
+      <PelliEventPage event={event} />
+    </main>
+  );
 }

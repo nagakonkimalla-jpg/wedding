@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { EventTheme } from "@/types";
 
@@ -11,18 +11,50 @@ interface ImageGalleryProps {
 }
 
 function LightboxModal({
-  src,
-  alt,
+  images,
+  currentIndex,
   onClose,
+  onPrev,
+  onNext,
 }: {
-  src: string;
-  alt: string;
+  images: string[];
+  currentIndex: number;
   onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
 }) {
+  const touchStartX = useRef<number | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onPrev();
+      else if (e.key === "ArrowRight") onNext();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, onPrev, onNext]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) onPrev();
+      else onNext();
+    }
+    touchStartX.current = null;
+  };
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <button
         onClick={onClose}
@@ -30,30 +62,71 @@ function LightboxModal({
       >
         &times;
       </button>
-      <div className="relative max-w-5xl max-h-[85vh] w-full h-full">
+
+      {/* Prev arrow */}
+      {images.length > 1 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onPrev(); }}
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center text-white/70 hover:text-white text-4xl transition-colors"
+        >
+          &#8249;
+        </button>
+      )}
+
+      {/* Next arrow */}
+      {images.length > 1 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onNext(); }}
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center text-white/70 hover:text-white text-4xl transition-colors"
+        >
+          &#8250;
+        </button>
+      )}
+
+      <div
+        className="relative max-w-5xl max-h-[85vh] w-full h-full mx-12"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Image
-          src={src}
-          alt={alt}
+          src={images[currentIndex]}
+          alt={`Gallery photo ${currentIndex + 1}`}
           fill
           className="object-contain"
           sizes="90vw"
         />
       </div>
+
+      {/* Counter */}
+      {images.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm font-body">
+          {currentIndex + 1} / {images.length}
+        </div>
+      )}
     </div>
   );
 }
 
 export default function ImageGallery({ images, theme, eventSlug }: ImageGalleryProps) {
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const realImages = images.filter((src) => src && !src.includes("placeholder"));
+
+  const goPrev = useCallback(() => {
+    setLightboxIndex((i) => (i === null ? null : (i - 1 + realImages.length) % realImages.length));
+  }, [realImages.length]);
+
+  const goNext = useCallback(() => {
+    setLightboxIndex((i) => (i === null ? null : (i + 1) % realImages.length));
+  }, [realImages.length]);
 
   if (!images || images.length === 0) return null;
 
   return (
     <>
-      <section className="py-12 sm:py-20 px-5 sm:px-6">
+      <section className="py-8 sm:py-12 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           {/* Section heading */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-4 mb-4">
               <div className="w-12 h-px" style={{ backgroundColor: `${theme.primary}40` }} />
               <div className="w-2 h-2 rotate-45" style={{ backgroundColor: theme.primary, opacity: 0.4 }} />
@@ -101,7 +174,7 @@ export default function ImageGallery({ images, theme, eventSlug }: ImageGalleryP
                   className={`relative rounded-2xl overflow-hidden shadow-md group cursor-pointer ${
                     isFeature ? "md:col-span-2 aspect-[2/1]" : "aspect-[4/3]"
                   }`}
-                  onClick={() => setLightboxImage(src)}
+                  onClick={() => setLightboxIndex(realImages.indexOf(src))}
                 >
                   <Image
                     src={src}
@@ -124,11 +197,13 @@ export default function ImageGallery({ images, theme, eventSlug }: ImageGalleryP
       </section>
 
       {/* Lightbox */}
-      {lightboxImage && (
+      {lightboxIndex !== null && (
         <LightboxModal
-          src={lightboxImage}
-          alt="Gallery photo"
-          onClose={() => setLightboxImage(null)}
+          images={realImages}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={goPrev}
+          onNext={goNext}
         />
       )}
     </>

@@ -10,6 +10,10 @@ import ImageGallery from "./ImageGallery";
 import VenueMap from "./VenueMap";
 import RSVPForm from "./RSVPForm";
 import AnimatedSection from "./AnimatedSection";
+import TiltCard from "./TiltCard";
+import GarlandBorder from "./GarlandBorder";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import CeremonyStages from "./CeremonyStages";
 
 import AddToCalendar from "./AddToCalendar";
 
@@ -19,7 +23,7 @@ interface EventPageProps {
 
 function DecorativeDivider() {
     return (
-        <div className="relative z-[4] flex items-center justify-center gap-4 py-6 sm:py-8 px-8">
+        <div className="relative z-[4] flex items-center justify-center gap-4 py-4 sm:py-6 px-8">
             <div className="flex-1 max-w-[100px] h-px" style={{ background: `linear-gradient(to right, transparent, #D4A01740)` }} />
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path
@@ -40,6 +44,9 @@ export default function PelliEventPage({ event }: EventPageProps) {
 
     return (
         <div className="min-h-screen bg-[#FDFBF7] pelli-paper-texture">
+
+            {/* Thoranam + Garland border — interactive scroll-driven wind */}
+            <GarlandBorder />
 
             {/* Logo top-left — cropped to show monogram in rounded badge */}
             <div className="fixed top-3 left-3 sm:top-4 sm:left-4 z-40">
@@ -65,20 +72,17 @@ export default function PelliEventPage({ event }: EventPageProps) {
             {/* Hero */}
             <PelliHeroSection event={event} />
 
-            {/* Background elegant watercolor frame */}
-            <div className="fixed inset-0 pointer-events-none pelli-border-frame z-[1]" />
-
             {/* Corner floral watermarks */}
             <div className="fixed -top-10 -right-10 w-48 h-48 pelli-watermark-floral pointer-events-none z-[0] opacity-30" />
             <div className="fixed -bottom-10 -left-10 w-48 h-48 pelli-watermark-floral pointer-events-none z-[0] opacity-30" style={{ transform: "rotate(180deg)" }} />
 
-            <div className="relative z-[2]">
+            <div className="relative z-[2] pl-[30px] pr-[30px] sm:pl-[55px] sm:pr-[55px] md:pl-[65px] md:pr-[65px]">
                 {/* Description */}
                 <AnimatedSection direction="fade">
-                    <section className="py-12 sm:py-20 px-5 sm:px-6">
+                    <section className="py-8 sm:py-12 px-4 sm:px-6">
                         <div className="max-w-2xl mx-auto text-center">
                             <p
-                                className="text-lg sm:text-xl font-body leading-relaxed text-[#3D2B1F]"
+                                className="text-base sm:text-xl font-body leading-relaxed text-[#3D2B1F]"
                             >
                                 {event.description}
                             </p>
@@ -88,10 +92,15 @@ export default function PelliEventPage({ event }: EventPageProps) {
 
                 <DecorativeDivider />
 
+                {/* Ceremony Stages */}
+                <CeremonyStages />
+
+                <DecorativeDivider />
+
                 {/* Event Details */}
                 <AnimatedSection direction="up">
                     <EventDetails event={event} />
-                    <div className="px-5 sm:px-6">
+                    <div className="px-4 sm:px-6">
                         <div className="max-w-3xl mx-auto flex justify-center">
                             <AddToCalendar event={event} />
                         </div>
@@ -102,30 +111,30 @@ export default function PelliEventPage({ event }: EventPageProps) {
 
                 {/* Countdown */}
                 <AnimatedSection direction="up" delay={100}>
-                    <div className="bg-[#FDFBF7] p-8 rounded-xl shadow-sm border border-[#D4A017]/20 max-w-4xl mx-auto">
-                        <CountdownTimer targetDate={event.date} theme={{ ...event.theme, bg: "#FDFBF7", text: "#8B1A1A" }} />
-                    </div>
+                    <TiltCard className="max-w-4xl mx-auto touch-manipulation">
+                        <div className="bg-[var(--bg-primary)] p-6 sm:p-10 md:p-14 rounded-2xl relative shadow-lg overflow-hidden" style={{ border: '1px solid rgba(212, 160, 23, 0.2)' }}>
+                            {/* Traditional Corners on the card */}
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scale(-1, -1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleX(-1)' }} />
+
+                            <div className="text-center relative z-10">
+                                <h2 className="text-sm font-body tracking-[0.3em] uppercase mb-3" style={{ color: 'rgba(74, 28, 28, 0.7)' }}>The Big Day Is</h2>
+                                <div className="text-2xl sm:text-4xl md:text-5xl font-heading text-[var(--accent-primary)] mb-8 sm:mb-10">Counting Down</div>
+                                <CountdownTimer targetDate="2026-04-23T08:00:00" theme={{ ...event.theme, bg: "var(--bg-primary)", text: "var(--text-primary)", primary: "var(--accent-primary)" }} />
+                            </div>
+                        </div>
+                    </TiltCard>
                 </AnimatedSection>
 
                 <DecorativeDivider />
-
-                {/* Dress Code (conditional) */}
-                {event.dressCode && (
-                    <>
-                        <AnimatedSection direction="up" delay={200}>
-                            <div className="bg-[#FDFBF7] py-6 px-10 rounded-xl shadow-sm border border-[#D4A017]/20 max-w-2xl mx-auto text-center">
-                                <DressCode dressCode={event.dressCode} theme={{ ...event.theme, primary: "#8B1A1A", text: "#3D2B1F" }} />
-                            </div>
-                        </AnimatedSection>
-                        <DecorativeDivider />
-                    </>
-                )}
 
                 {/* Gallery */}
                 {event.galleryImages.length > 0 && (
                     <>
                         <AnimatedSection direction="up">
-                            <div className="bg-white p-6 rounded-xl shadow-md border border-[#D4A017]/20 max-w-6xl mx-auto">
+                            <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border border-[#D4A017]/20 max-w-6xl mx-auto">
                                 <ImageGallery
                                     images={event.galleryImages}
                                     theme={{ ...event.theme, primary: "#D4A017", bg: "#FFFFFF" }}
@@ -137,16 +146,24 @@ export default function PelliEventPage({ event }: EventPageProps) {
                     </>
                 )}
 
-                {/* Venue */}
-                <AnimatedSection direction="left">
-                    <div className="bg-white p-6 rounded-xl shadow-md border border-[#D4A017]/20 max-w-5xl mx-auto">
-                        <VenueMap
-                            venue={event.venue}
-                            address={event.venueAddress}
-                            googleMapsUrl={event.googleMapsUrl}
-                            theme={{ ...event.theme, bg: "#FFFFFF", primary: "#8B1A1A", text: "#3D2B1F" }}
-                            venueImage={event.venueImage}
-                        />
+                {/* Venue Details & Map Section */}
+                <AnimatedSection delay={0.4}>
+                    <div className="max-w-3xl mx-auto">
+                        <TiltCard className="h-full touch-manipulation">
+                            <div className="h-full bg-[var(--bg-primary)] p-6 sm:p-10 rounded-2xl sm:rounded-[2rem] shadow-md" style={{ border: '1px solid rgba(212, 160, 23, 0.2)' }}>
+                                <h3 className="text-xl sm:text-2xl font-heading mb-6 text-[var(--text-primary)] flex items-center gap-3">
+                                    <FaMapMarkerAlt className="text-[var(--accent-primary)]" />
+                                    Venue Details
+                                </h3>
+                                <VenueMap
+                                    venue={event.venue}
+                                    address={event.venueAddress}
+                                    googleMapsUrl={event.googleMapsUrl}
+                                    theme={{ ...event.theme, bg: "var(--bg-primary)", primary: "var(--accent-primary)", text: "var(--text-primary)" }}
+                                    venueImage={event.venueImage}
+                                />
+                            </div>
+                        </TiltCard>
                     </div>
                 </AnimatedSection>
 
@@ -154,13 +171,24 @@ export default function PelliEventPage({ event }: EventPageProps) {
 
                 {/* RSVP Form */}
                 <AnimatedSection direction="up">
-                    <div className="bg-[#FDFBF7] p-8 rounded-xl shadow-sm border border-[#D4A017]/30 max-w-3xl mx-auto mb-10">
-                        <RSVPForm event={{ ...event, theme: { ...event.theme, primary: "#8B1A1A", cardBg: "#FFFFFF", text: "#3D2B1F", bg: "#FDFBF7" } }} />
-                    </div>
+                    <TiltCard className="max-w-2xl mx-auto touch-manipulation">
+                        <div className="bg-[var(--bg-primary)] p-6 sm:p-10 rounded-2xl sm:rounded-[2rem] shadow-lg border-t-4 border-[var(--accent-primary)] relative overflow-hidden">
+                            {/* Traditional Corners on the card */}
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 opacity-40 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-10 h-10 sm:w-12 sm:h-12 opacity-40 mix-blend-multiply" style={{ transform: 'scale(-1, -1)' }} />
+                            <div className="relative z-10 text-center mb-6 sm:mb-8">
+                                <h2 className="text-2xl sm:text-4xl font-heading text-[var(--accent-primary)] mb-3">You're Invited</h2>
+                                <p className="font-body text-sm sm:text-base" style={{ color: 'rgba(74, 28, 28, 0.7)' }}>Kindly let us know if you can join us.</p>
+                            </div>
+                            <div className="relative z-10">
+                                <RSVPForm event={{ ...event, theme: { ...event.theme, primary: "var(--accent-primary)", cardBg: "var(--bg-primary)", text: "var(--text-primary)", bg: "var(--bg-primary)" } }} />
+                            </div>
+                        </div>
+                    </TiltCard>
                 </AnimatedSection>
 
                 {/* Footer */}
-                <footer className="py-14 sm:py-20 text-center px-5 relative z-[4]">
+                <footer className="py-10 sm:py-16 text-center px-4 relative z-[4]">
                     <div className="max-w-md mx-auto">
                         <div className="flex items-center justify-center gap-4 mb-6">
                             <div className="w-16 h-px" style={{ background: `linear-gradient(to right, transparent, rgba(212, 160, 23, 0.4))` }} />

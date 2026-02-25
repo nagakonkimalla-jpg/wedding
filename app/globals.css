@@ -5,15 +5,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Lato:wght@300;400;700;900&display=swap');
 
 @layer base {
+  :root {
+    --bg-primary: #ffffff;
+    --text-primary: #1a1a1a;
+    --accent-primary: #D4A017;
+    --theme-gradient: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  }
+
+  [data-theme="pelli"] {
+    --bg-primary: #FAF5E9;
+    --text-primary: #4A1C1C;
+    /* Deep Maroon */
+    --accent-primary: #D4A017;
+    /* Gold */
+    --theme-gradient: linear-gradient(180deg, #FFE4C4 0%, #FAF5E9 50%);
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
   body {
     @apply font-body antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
 
-  h1, h2, h3, h4 {
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
     @apply font-heading;
   }
 }
@@ -24,12 +60,10 @@
   }
 
   .gold-shimmer {
-    background: linear-gradient(
-      110deg,
-      transparent 33%,
-      rgba(212, 160, 23, 0.15) 50%,
-      transparent 67%
-    );
+    background: linear-gradient(110deg,
+        transparent 33%,
+        rgba(212, 160, 23, 0.15) 50%,
+        transparent 67%);
     background-size: 200% 100%;
     animation: shimmer 3s linear infinite;
   }
@@ -56,6 +90,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -134,15 +169,13 @@
 
   /* Ornamental repeat border pattern */
   .border-ornamental {
-    border-image: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 8px,
-      currentColor 8px,
-      currentColor 10px,
-      transparent 10px,
-      transparent 18px
-    ) 1;
+    border-image: repeating-linear-gradient(90deg,
+        transparent,
+        transparent 8px,
+        currentColor 8px,
+        currentColor 10px,
+        transparent 10px,
+        transparent 18px) 1;
   }
 
   /* Watercolor ink wash effects for sangeeth */
@@ -171,6 +204,7 @@
     border: 2px solid rgba(197, 160, 40, 0.15);
     border-radius: 4px;
   }
+
   .texture-pelli::after {
     content: '';
     position: fixed;
@@ -180,4 +214,56 @@
     border: 1px solid rgba(139, 26, 26, 0.10);
     border-radius: 2px;
   }
+}
+
+@layer utilities {
+  .animate-swing {
+    animation: gentle-swing 6s ease-in-out infinite alternate;
+    transform-origin: top center;
+  }
+
+  .animate-swing-delayed {
+    animation: gentle-swing-delayed 7s ease-in-out infinite alternate;
+    transform-origin: top center;
+    animation-delay: 1.5s;
+  }
+
+  @keyframes gentle-swing {
+    0% {
+      transform: rotate(-3deg);
+    }
+
+    100% {
+      transform: rotate(3deg);
+    }
+  }
+
+  @keyframes gentle-swing-delayed {
+    0% {
+      transform: rotate(-4deg);
+    }
+
+    100% {
+      transform: rotate(4deg);
+    }
+  }
+
+  .animate-bell-ring {
+    animation: bell-ring 1.5s ease-out;
+    transform-origin: top center;
+  }
+
+  @keyframes bell-ring {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(20deg); }
+    20% { transform: rotate(-18deg); }
+    30% { transform: rotate(15deg); }
+    40% { transform: rotate(-12deg); }
+    50% { transform: rotate(8deg); }
+    60% { transform: rotate(-5deg); }
+    75% { transform: rotate(3deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  /* Garland animations now handled by GarlandBorder component via requestAnimationFrame */
 }

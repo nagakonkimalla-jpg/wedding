@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+  <!-- Minimalist Charminar Watermark Design -->
+  <g transform="translate(50, 50)">
+    <!-- Base Ground Line -->
+    <path d="M 10 320 L 290 320" stroke-width="1" opacity="0.5" />
+    
+    <!-- Left Minaret -->
+    <path d="M 50 320 L 50 120 C 50 100 70 100 70 120 L 70 320" />
+    <path d="M 40 250 L 80 250 M 40 180 L 80 180 M 40 120 L 80 120" stroke-width="1" opacity="0.6" />
+    <path d="M 50 120 Q 60 80 70 120" />
+    <path d="M 60 95 L 60 65" stroke-width="1" />
+    <circle cx="60" cy="62" r="3" />
+    
+    <!-- Right Minaret -->
+    <path d="M 230 320 L 230 120 C 230 100 250 100 250 120 L 250 320" />
+    <path d="M 220 250 L 260 250 M 220 180 L 260 180 M 220 120 L 260 120" stroke-width="1" opacity="0.6" />
+    <path d="M 230 120 Q 240 80 250 120" />
+    <path d="M 240 95 L 240 65" stroke-width="1" />
+    <circle cx="240" cy="62" r="3" />
+
+    <!-- Grand Central Arch -->
+    <path d="M 90 320 L 90 220 C 90 150 210 150 210 220 L 210 320" />
+    <path d="M 110 320 L 110 230 C 110 170 190 170 190 230 L 190 320" stroke-width="1" opacity="0.4" />
+
+    <!-- Side Arches (Ground Level) -->
+    <path d="M 70 320 L 70 270 Q 80 255 90 270 L 90 320" stroke-width="1" opacity="0.5" />
+    <path d="M 210 320 L 210 270 Q 220 255 230 270 L 230 320" stroke-width="1" opacity="0.5" />
+
+    <!-- Horizontal Galleries / Balconies -->
+    <path d="M 70 180 L 230 180" />
+    <path d="M 70 150 L 230 150" />
+    <path d="M 70 120 L 230 120" stroke-width="1" opacity="0.6" />
+
+    <!-- Mid-Level Windows / Arches -->
+    <path d="M 90 180 L 90 160 Q 105 145 120 160 L 120 180" stroke-width="1" />
+    <path d="M 135 180 L 135 160 Q 150 145 165 160 L 165 180" stroke-width="1" />
+    <path d="M 180 180 L 180 160 Q 195 145 210 160 L 210 180" stroke-width="1" />
+
+    <!-- Top Level Details & Small Dome -->
+    <path d="M 140 120 Q 150 100 160 120" />
+    <path d="M 150 110 L 150 90" stroke-width="1" />
+    <circle cx="150" cy="88" r="2" />
+    
+    <path d="M 95 120 L 95 110 Q 105 100 115 110 L 115 120" stroke-width="1" opacity="0.5" />
+    <path d="M 185 120 L 185 110 Q 195 100 205 110 L 205 120" stroke-width="1" opacity="0.5" />
+
+    <!-- Decorative Diamonds in Upper Gallery -->
+    <path d="M 105 135 L 110 130 L 115 135 L 110 140 Z" stroke-width="0.5" opacity="0.5" />
+    <path d="M 145 135 L 150 130 L 155 135 L 150 140 Z" stroke-width="0.5" opacity="0.5" />
+    <path d="M 185 135 L 190 130 L 195 135 L 190 140 Z" stroke-width="0.5" opacity="0.5" />
+  </g>
+</svg>

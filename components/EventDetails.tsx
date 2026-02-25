@@ -36,7 +36,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
     });
 
   const details = [
-    { icon: "\u{1F4C5}", label: "Date", value: formatDate(event.date) },
+    { icon: "calendar", label: "Date", value: formatDate(event.date) },
     { icon: "\u{1F550}", label: "Time", value: event.time },
     { icon: "\u{1F4CD}", label: "Venue", value: event.venue },
     ...(event.dressCode
@@ -45,10 +45,10 @@ export default function EventDetails({ event }: EventDetailsProps) {
   ];
 
   return (
-    <section className="py-12 sm:py-20 px-5 sm:px-6">
+    <section className="py-8 sm:py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         {/* Ornamental heading */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-4 mb-4">
             <svg width="40" height="2" className="opacity-40">
               <line x1="0" y1="1" x2="40" y2="1" stroke={event.theme.primary} strokeWidth="1" />
@@ -88,7 +88,16 @@ export default function EventDetails({ event }: EventDetailsProps) {
               <OrnamentalCorner color={event.theme.primary} position="bottom-right" />
 
               <div className="text-4xl mb-4 transition-transform duration-300 group-hover:scale-110">
-                {detail.icon}
+                {detail.icon === "calendar" ? (
+                  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" className="mx-auto">
+                    <rect x="4" y="8" width="36" height="32" rx="4" stroke={event.theme.primary} strokeWidth="1.5" fill={event.theme.primary} fillOpacity="0.08" />
+                    <rect x="4" y="8" width="36" height="13" rx="4" fill={event.theme.primary} fillOpacity="0.18" />
+                    <text x="22" y="18" textAnchor="middle" fontSize="8" fontWeight="700" fill={event.theme.primary} fontFamily="system-ui">APR</text>
+                    <text x="22" y="34" textAnchor="middle" fontSize="16" fontWeight="700" fill={event.theme.text} fontFamily="system-ui">23</text>
+                    <line x1="14" y1="4" x2="14" y2="12" stroke={event.theme.primary} strokeWidth="2" strokeLinecap="round" />
+                    <line x1="30" y1="4" x2="30" y2="12" stroke={event.theme.primary} strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                ) : detail.icon}
               </div>
               <div
                 className="text-xs uppercase tracking-[0.2em] font-body mb-2"

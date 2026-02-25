@@ -219,7 +219,7 @@ export const events: Record<string, EventInfo> = {
     subtitle: "పెళ్ళి",
     tagline: "Two souls, one beautiful journey",
     date: "2026-04-23",
-    time: "8:00 AM - 2:00 PM",
+    time: "Sumuhurtham at 9:23 AM",
     venue: "Hindu Temple of Atlanta",
     venueAddress: "5851 GA-85, Riverdale, GA 30274",
     googleMapsUrl: "https://maps.google.com/?q=Hindu+Temple+of+Atlanta",
