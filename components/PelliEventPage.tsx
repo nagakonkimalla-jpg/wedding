@@ -16,6 +16,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import CeremonyStages from "./CeremonyStages";
 
 import AddToCalendar from "./AddToCalendar";
+import GiftsSection from "./GiftsSection";
 
 interface EventPageProps {
     event: EventInfo;
@@ -185,6 +186,13 @@ export default function PelliEventPage({ event }: EventPageProps) {
                             </div>
                         </div>
                     </TiltCard>
+                </AnimatedSection>
+
+                <DecorativeDivider />
+
+                {/* Gifts / Blessings */}
+                <AnimatedSection direction="up">
+                    <GiftsSection theme={{ ...event.theme, primary: "var(--accent-primary)", cardBg: "var(--bg-primary)", text: "var(--text-primary)" }} />
                 </AnimatedSection>
 
                 {/* Footer */}

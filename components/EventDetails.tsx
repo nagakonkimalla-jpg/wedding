@@ -92,8 +92,8 @@ export default function EventDetails({ event }: EventDetailsProps) {
                   <svg width="44" height="44" viewBox="0 0 44 44" fill="none" className="mx-auto">
                     <rect x="4" y="8" width="36" height="32" rx="4" stroke={event.theme.primary} strokeWidth="1.5" fill={event.theme.primary} fillOpacity="0.08" />
                     <rect x="4" y="8" width="36" height="13" rx="4" fill={event.theme.primary} fillOpacity="0.18" />
-                    <text x="22" y="18" textAnchor="middle" fontSize="8" fontWeight="700" fill={event.theme.primary} fontFamily="system-ui">APR</text>
-                    <text x="22" y="34" textAnchor="middle" fontSize="16" fontWeight="700" fill={event.theme.text} fontFamily="system-ui">23</text>
+                    <text x="22" y="18" textAnchor="middle" fontSize="8" fontWeight="700" fill={event.theme.primary} fontFamily="system-ui">{new Date(event.date + "T00:00:00").toLocaleDateString("en-US", { month: "short" }).toUpperCase()}</text>
+                    <text x="22" y="34" textAnchor="middle" fontSize="16" fontWeight="700" fill={event.theme.text} fontFamily="system-ui">{new Date(event.date + "T00:00:00").getDate()}</text>
                     <line x1="14" y1="4" x2="14" y2="12" stroke={event.theme.primary} strokeWidth="2" strokeLinecap="round" />
                     <line x1="30" y1="4" x2="30" y2="12" stroke={event.theme.primary} strokeWidth="2" strokeLinecap="round" />
                   </svg>

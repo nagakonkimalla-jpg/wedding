@@ -4,11 +4,11 @@ export const events: Record<string, EventInfo> = {
   haldi: {
     slug: "haldi",
     title: "Haldi Ceremony",
-    subtitle: "పసుపు కుంకుమ",
+    subtitle: "నలుగు",
     tagline: "A celebration of turmeric blessings & joy",
     date: "2026-04-19",
-    time: "10:00 AM - 1:00 PM",
-    venue: "Konkimalla Family Residence",
+    time: "10:00 AM - 3:00 PM",
+    venue: "The PalmTree House",
     venueAddress: "3670 Matt Hwy, Cumming, GA 30028",
     googleMapsUrl: "https://maps.google.com/?q=3670+Matt+Hwy+Cumming+GA+30028",
     dressCode: "Yellow / Traditional Indian Attire",
@@ -94,11 +94,11 @@ export const events: Record<string, EventInfo> = {
   sangeeth: {
     slug: "sangeeth",
     title: "Sangeeth Night",
-    subtitle: "సంగీతం",
+    subtitle: "సంగీత్",
     tagline: "A night of music, dance & celebration",
     date: "2026-04-21",
     time: "6:00 PM - 11:00 PM",
-    venue: "Venue Hall",
+    venue: "Bliss Events",
     venueAddress: "3170 Peachtree Parkway, Suwanee, GA 30024",
     googleMapsUrl:
       "https://maps.google.com/?q=3170+Peachtree+Parkway+Suwanee+GA+30024",
@@ -309,15 +309,8 @@ export const events: Record<string, EventInfo> = {
 
 export const eventOrder = [
   "haldi",
-  "karthik-upanayanam",
-  "mehendi",
   "sangeeth",
-  "pellikuthuru",
-  "pellikoduku",
-  "aditya-upanayanam",
   "pelli",
-  "satyanarayana-swami-vratam-aditya",
-  "satyanarayana-swami-vratam-neelu",
 ];
 
 export function getEvent(slug: string): EventInfo | undefined {

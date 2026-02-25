@@ -19,7 +19,7 @@ import AmbientAudio from "@/components/AmbientAudio";
 export default function PelliPage() {
   return (
     <main data-theme="pelli" className="min-h-screen bg-(--bg-primary) text-(--text-primary)">
-      <AmbientAudio audioPath="/audio/pelli_song.mp3" startTime={40} />
+      <AmbientAudio audioPath="/audio/seetha_kalyanam.mp3" startTime={40} />
       <PelliEventPage event={event} />
     </main>
   );
