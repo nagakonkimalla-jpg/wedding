@@ -41,19 +41,21 @@ export default function AnimatedEventCard({
 }: AnimatedEventCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
   }, []);
 
   return (
     <motion.div
-      initial={mounted ? { opacity: 0, y: prefersReducedMotion ? 0 : 60 } : false}
+      initial={mounted ? { opacity: 0, y: prefersReducedMotion ? 0 : isMobile ? 30 : 60 } : false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{
         duration: prefersReducedMotion ? 0.2 : 0.5,
-        delay: prefersReducedMotion ? 0 : index * 0.15,
+        delay: prefersReducedMotion ? 0 : isMobile ? 0 : index * 0.15,
         ease: "easeOut",
       }}
     >

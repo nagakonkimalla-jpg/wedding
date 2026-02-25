@@ -7,25 +7,29 @@ export default function AnimatedHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
   }, []);
+
+  const noParallax = prefersReducedMotion || isMobile;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
 
-  // Parallax for floating stars
-  const starY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -60]);
-  const starY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -90]);
-  const starY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -40]);
-  const starY4 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -70]);
+  // Parallax for floating stars — disabled on mobile for smooth scroll
+  const starY1 = useTransform(scrollYProgress, [0, 1], [0, noParallax ? 0 : -60]);
+  const starY2 = useTransform(scrollYProgress, [0, 1], [0, noParallax ? 0 : -90]);
+  const starY3 = useTransform(scrollYProgress, [0, 1], [0, noParallax ? 0 : -40]);
+  const starY4 = useTransform(scrollYProgress, [0, 1], [0, noParallax ? 0 : -70]);
 
-  // Title drifts up and fades slightly
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -30]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [1, prefersReducedMotion ? 1 : 0.6]);
+  // Title drifts up and fades slightly — disabled on mobile
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, noParallax ? 0 : -30]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [1, noParallax ? 1 : 0.6]);
 
   // Scroll indicator fades out
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
