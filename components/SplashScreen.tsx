@@ -76,9 +76,23 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (exiting) return;
 
-      // Haptic feedback on mobile
+      // Haptic feedback on Android; subtle tap sound on all devices (incl. iOS)
       if (navigator.vibrate) {
         navigator.vibrate([30, 50, 20]);
+      }
+      try {
+        const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 1800;
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.06);
+      } catch {
+        // silent fallback
       }
 
       const rect = e.currentTarget.getBoundingClientRect();

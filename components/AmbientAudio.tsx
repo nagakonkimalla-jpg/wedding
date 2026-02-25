@@ -9,14 +9,14 @@ interface AmbientAudioProps {
 }
 
 export default function AmbientAudio({ audioPath, startTime = 0 }: AmbientAudioProps) {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
-        // Check localStorage preference
+        // Default to on unless user explicitly muted
         const storedPreference = localStorage.getItem('wedding-audio-unmuted');
-        if (storedPreference === 'true') {
-            setIsPlaying(true);
+        if (storedPreference === 'false') {
+            setIsPlaying(false);
         }
 
         const audio = new Audio(audioPath);

@@ -173,7 +173,7 @@ export default function RSVPForm({ event }: RSVPFormProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-body text-sm font-semibold mb-1" style={{ color: event.theme.text }}>
-                  Number of Guests
+                  Number of Adults
                 </label>
                 <input
                   type="number"
