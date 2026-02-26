@@ -49,17 +49,6 @@ export async function POST(request: NextRequest) {
           : "Thank you for letting us know. We'll miss you!",
     });
   } catch (error) {
-    if (error instanceof DuplicateError) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "It looks like you've already RSVP'd for this event. If you need to update your response, please contact us directly.",
-        },
-        { status: 409 }
-      );
-    }
-
     const errMsg = error instanceof Error ? error.message : String(error);
     console.error("RSVP submission error:", errMsg);
     return NextResponse.json(
