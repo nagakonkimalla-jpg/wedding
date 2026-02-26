@@ -18,35 +18,46 @@ function parseTimeTo24(segment: string): { hour: number; min: number } | null {
   return { hour, min };
 }
 
+// Manual calendar time overrides for events with non-standard time formats
+const calendarTimeOverrides: Record<string, { start: string; end: string }> = {
+  pelli: { start: "080000", end: "123000" },
+};
+
 function buildGoogleCalendarUrl(event: EventInfo): string {
   const dateStr = event.date.replace(/-/g, ""); // "20260423"
 
-  // Parse time string for start/end
-  const timeRegex = /(\d{1,2}:\d{2}\s*[AP]M)/gi;
-  const matches = event.time.match(timeRegex);
-
+  const override = calendarTimeOverrides[event.slug];
   let dates: string;
-  if (matches && matches.length >= 1) {
-    const start = parseTimeTo24(matches[0]);
-    const end = matches.length >= 2 ? parseTimeTo24(matches[1]) : null;
 
-    const fmt = (t: { hour: number; min: number }) =>
-      `${String(t.hour).padStart(2, "0")}${String(t.min).padStart(2, "0")}00`;
-
-    const startStr = start ? fmt(start) : "090000";
-    const endStr = end
-      ? fmt(end)
-      : start
-        ? fmt({ hour: (start.hour + 3) % 24, min: start.min })
-        : "120000";
-
-    dates = `${dateStr}T${startStr}/${dateStr}T${endStr}`;
+  if (override) {
+    dates = `${dateStr}T${override.start}/${dateStr}T${override.end}`;
   } else {
-    // All-day fallback
-    const nextDay = new Date(event.date + "T00:00:00");
-    nextDay.setDate(nextDay.getDate() + 1);
-    const nd = nextDay.toISOString().split("T")[0].replace(/-/g, "");
-    dates = `${dateStr}/${nd}`;
+    // Parse time string for start/end
+    const timeRegex = /(\d{1,2}:\d{2}\s*[AP]M)/gi;
+    const matches = event.time.match(timeRegex);
+
+    if (matches && matches.length >= 1) {
+      const start = parseTimeTo24(matches[0]);
+      const end = matches.length >= 2 ? parseTimeTo24(matches[1]) : null;
+
+      const fmt = (t: { hour: number; min: number }) =>
+        `${String(t.hour).padStart(2, "0")}${String(t.min).padStart(2, "0")}00`;
+
+      const startStr = start ? fmt(start) : "090000";
+      const endStr = end
+        ? fmt(end)
+        : start
+          ? fmt({ hour: (start.hour + 3) % 24, min: start.min })
+          : "120000";
+
+      dates = `${dateStr}T${startStr}/${dateStr}T${endStr}`;
+    } else {
+      // All-day fallback
+      const nextDay = new Date(event.date + "T00:00:00");
+      nextDay.setDate(nextDay.getDate() + 1);
+      const nd = nextDay.toISOString().split("T")[0].replace(/-/g, "");
+      dates = `${dateStr}/${nd}`;
+    }
   }
 
   const params = new URLSearchParams({

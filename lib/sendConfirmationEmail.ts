@@ -28,12 +28,19 @@ function parseTime(timeStr: string): { start: string; end: string } | null {
   return { start, end };
 }
 
+const calendarTimeOverrides: Record<string, { start: string; end: string }> = {
+  pelli: { start: "080000", end: "123000" },
+};
+
 function generateCalendarLink(event: EventInfo): string {
   const dateStr = event.date.replace(/-/g, ""); // "20260419"
-  const parsed = parseTime(event.time);
+  const override = calendarTimeOverrides[event.slug];
 
   let dates: string;
-  if (parsed) {
+  if (override) {
+    dates = `${dateStr}T${override.start}/${dateStr}T${override.end}`;
+  } else if (parseTime(event.time)) {
+    const parsed = parseTime(event.time)!;
     dates = `${dateStr}T${parsed.start}/${dateStr}T${parsed.end}`;
   } else {
     // All-day fallback
