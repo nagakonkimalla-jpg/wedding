@@ -112,12 +112,12 @@ export default function PelliEventPage({ event }: EventPageProps) {
                 {/* Countdown */}
                 <AnimatedSection direction="up" delay={100}>
                     <TiltCard className="max-w-4xl mx-auto touch-manipulation">
-                        <div className="bg-[var(--bg-primary)] p-6 sm:p-10 md:p-14 rounded-2xl relative shadow-lg overflow-hidden" style={{ border: '1px solid rgba(212, 160, 23, 0.2)' }}>
+                        <div className="bg-[var(--bg-primary)] p-8 sm:p-12 md:p-16 rounded-2xl relative shadow-lg overflow-hidden" style={{ border: '1px solid rgba(212, 160, 23, 0.2)' }}>
                             {/* Traditional Corners on the card */}
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'rotate(180deg)' }} />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleX(-1)' }} />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-1 left-1 w-10 h-10 sm:top-2 sm:left-2 sm:w-20 sm:h-20 md:w-24 md:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'rotate(180deg)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-1 right-1 w-10 h-10 sm:top-2 sm:right-2 sm:w-20 sm:h-20 md:w-24 md:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-1 left-1 w-10 h-10 sm:bottom-2 sm:left-2 sm:w-20 sm:h-20 md:w-24 md:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleX(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-1 right-1 w-10 h-10 sm:bottom-2 sm:right-2 sm:w-20 sm:h-20 md:w-24 md:h-24 opacity-60 mix-blend-multiply" />
 
                             <div className="text-center relative z-10">
                                 <h2 className="text-sm font-body tracking-[0.3em] uppercase mb-3" style={{ color: 'rgba(74, 28, 28, 0.7)' }}>The Big Day Is</h2>
