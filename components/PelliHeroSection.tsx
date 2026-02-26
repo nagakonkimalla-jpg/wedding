@@ -150,7 +150,7 @@ export default function PelliHeroSection({ event }: HeroSectionProps) {
                         y: useTransform(scrollYProgress, [0.4, 0.8], ["10%", "-20%"])
                     }}
                 >
-                    <div className="flex flex-col items-center p-8 sm:p-12 rounded-3xl backdrop-blur-sm shadow-xl max-w-2xl px-6" style={{ backgroundColor: 'rgba(250, 245, 233, 0.9)', border: '1px solid rgba(212, 160, 23, 0.2)' }}>
+                    <div className="flex flex-col items-center p-8 sm:p-12 rounded-3xl shadow-xl max-w-2xl px-6" style={{ backgroundColor: 'rgba(250, 245, 233, 0.97)', border: '1px solid rgba(212, 160, 23, 0.2)' }}>
                         <img
                             src="/assets/images/pelli/couple.png"
                             alt="Telugu Bride and Groom"
