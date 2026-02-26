@@ -9,18 +9,29 @@ interface RSVPFormProps {
 }
 
 export default function RSVPForm({ event }: RSVPFormProps) {
-  const [formData, setFormData] = useState<RSVPFormData>({
-    fullName: "",
-    phone: "",
-    email: "",
-    numberOfGuests: 1,
-    numberOfKids: 0,
-    willAttend: "yes",
-    dietaryRestrictions: "",
-    message: "",
-    rsvpSide: undefined,
-    eventSlug: event.slug,
-    timestamp: "",
+  const [formData, setFormData] = useState<RSVPFormData>(() => {
+    const defaults: RSVPFormData = {
+      fullName: "",
+      phone: "",
+      email: "",
+      numberOfGuests: 1,
+      numberOfKids: 0,
+      willAttend: "yes",
+      dietaryRestrictions: "",
+      message: "",
+      rsvpSide: undefined,
+      eventSlug: event.slug,
+      timestamp: "",
+    };
+    if (typeof window === "undefined") return defaults;
+    try {
+      const cached = localStorage.getItem("wedding-rsvp-details");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        return { ...defaults, ...parsed, eventSlug: event.slug, message: "", rsvpSide: undefined, timestamp: "" };
+      }
+    } catch {}
+    return defaults;
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +75,18 @@ export default function RSVPForm({ event }: RSVPFormProps) {
       if (data.success) {
         setResponseMessage(data.message);
         setShowModal(true);
+        // Cache personal details so other event RSVPs auto-populate
+        try {
+          localStorage.setItem("wedding-rsvp-details", JSON.stringify({
+            fullName: formData.fullName,
+            phone: formData.phone,
+            email: formData.email,
+            numberOfGuests: formData.numberOfGuests,
+            numberOfKids: formData.numberOfKids,
+            willAttend: formData.willAttend,
+            dietaryRestrictions: formData.dietaryRestrictions,
+          }));
+        } catch {}
         setFormData({
           fullName: "",
           phone: "",
@@ -92,9 +115,9 @@ export default function RSVPForm({ event }: RSVPFormProps) {
 
   return (
     <>
-      <section id="rsvp" className="py-20 px-4">
+      <section id="rsvp" className="py-8 px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-6">
             <div className="flex items-center justify-center gap-4 mb-4">
               <div className="w-12 h-px" style={{ backgroundColor: `${event.theme.primary}40` }} />
               <div className="w-2 h-2 rotate-45" style={{ backgroundColor: event.theme.primary, opacity: 0.4 }} />
@@ -231,7 +254,7 @@ export default function RSVPForm({ event }: RSVPFormProps) {
                         style={{ accentColor: event.theme.primary }}
                       />
                       <span style={{ color: event.theme.text }}>
-                        {option === "yes" ? "Joyfully Accept" : "Regretfully Decline"}
+                        {option === "yes" ? "Accept" : "Decline"}
                       </span>
                     </label>
                   </div>

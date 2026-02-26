@@ -52,21 +52,27 @@ export default function GarlandBorder() {
                 const kids = thoranamRef.current.children;
                 for (let i = 0; i < kids.length; i++) {
                     const phase = i * 0.45;
-                    // Idle breeze — two sine waves for organic movement
+                    // Idle breeze — layered sine waves for organic wind
                     const idleY =
-                        Math.sin(t * 0.7 + phase) * 1.5 +
-                        Math.sin(t * 1.4 + phase * 0.6) * 0.8;
-                    // Slight rotation like hanging cloth in wind
+                        Math.sin(t * 0.7 + phase) * 2.8 +
+                        Math.sin(t * 1.4 + phase * 0.6) * 1.5 +
+                        Math.sin(t * 2.1 + phase * 1.3) * 0.6;
+                    // Slight horizontal sway
+                    const idleX =
+                        Math.sin(t * 0.5 + phase * 0.8) * 1.0;
+                    // Rotation like hanging cloth in wind
                     const idleRot =
-                        Math.sin(t * 0.9 + phase * 1.2) * 0.6;
+                        Math.sin(t * 0.9 + phase * 1.2) * 1.4 +
+                        Math.sin(t * 1.8 + phase * 0.7) * 0.5;
                     // Scroll-driven ripple
                     const scrollWaveY = Math.sin(sy * 0.005 + phase) * vAmp * 0.4;
                     const scrollWaveRot = Math.sin(sy * 0.004 + phase) * vAmp * 0.15;
 
+                    const dx = idleX;
                     const dy = idleY + scrollWaveY;
                     const rot = idleRot + scrollWaveRot;
                     (kids[i] as HTMLElement).style.transform =
-                        `translateY(${dy}px) rotate(${rot}deg)`;
+                        `translate(${dx}px, ${dy}px) rotate(${rot}deg)`;
                 }
             }
 

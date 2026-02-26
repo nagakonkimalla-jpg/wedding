@@ -40,7 +40,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
     { icon: "\u{1F550}", label: "Time", value: event.time },
     { icon: "\u{1F4CD}", label: "Venue", value: event.venue },
     ...(event.dressCode
-      ? [{ icon: "\u{1F457}", label: "Attire", value: event.dressCode }]
+      ? [{ icon: "🥻", label: "Attire", value: event.dressCode }]
       : []),
   ];
 

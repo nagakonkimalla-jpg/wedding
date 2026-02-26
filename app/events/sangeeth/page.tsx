@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { events } from "@/config/events";
 import EventPage from "@/components/EventPage";
+import AmbientAudio from "@/components/AmbientAudio";
 
 const event = events.sangeeth;
 
@@ -15,5 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function SangeethPage() {
-  return <EventPage event={event} />;
+  return (
+    <>
+      <AmbientAudio audioPath="/audio/sangeeth.mp3" />
+      <EventPage event={event} />
+    </>
+  );
 }

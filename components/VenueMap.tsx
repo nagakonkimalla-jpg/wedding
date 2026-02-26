@@ -11,15 +11,10 @@ interface VenueMapProps {
 
 export default function VenueMap({ venue, address, googleMapsUrl, theme, venueImage }: VenueMapProps) {
   return (
-    <section className="py-12 sm:py-20 px-5 sm:px-6">
+    <section className="px-5 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Ornamental heading */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="w-12 h-px" style={{ backgroundColor: `${theme.primary}40` }} />
-            <div className="w-2 h-2 rotate-45" style={{ backgroundColor: theme.primary, opacity: 0.4 }} />
-            <div className="w-12 h-px" style={{ backgroundColor: `${theme.primary}40` }} />
-          </div>
+        <div className="text-center mb-6">
           <h2 className="text-3xl sm:text-4xl font-heading font-bold" style={{ color: theme.text }}>
             Venue
           </h2>

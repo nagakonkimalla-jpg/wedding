@@ -51,13 +51,12 @@ export default function PelliEventPage({ event }: EventPageProps) {
 
             {/* Logo top-left — cropped to show monogram in rounded badge */}
             <div className="fixed top-3 left-3 sm:top-4 sm:left-4 z-40">
-                <div className="relative w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] md:w-[80px] md:h-[80px] rounded-full overflow-hidden shadow-lg border border-[#D4A017]/30">
+                <div className="relative w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] md:w-[80px] md:h-[80px] rounded-full overflow-hidden shadow-lg bg-white border border-[#D4A017]/30">
                     <Image
-                        src="/images/logo.png"
+                        src="/assets/images/pelli/logo.jpeg"
                         alt="N & A"
                         fill
-                        className="object-cover bg-white"
-                        style={{ objectPosition: "50% 42%" }}
+                        className="object-cover"
                     />
                 </div>
             </div>
@@ -115,10 +114,10 @@ export default function PelliEventPage({ event }: EventPageProps) {
                     <TiltCard className="max-w-4xl mx-auto touch-manipulation">
                         <div className="bg-[var(--bg-primary)] p-6 sm:p-10 md:p-14 rounded-2xl relative shadow-lg overflow-hidden" style={{ border: '1px solid rgba(212, 160, 23, 0.2)' }}>
                             {/* Traditional Corners on the card */}
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scale(-1, -1)' }} />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleX(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'rotate(180deg)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 left-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" style={{ transform: 'scaleX(-1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute bottom-0 right-0 w-12 h-12 sm:w-24 sm:h-24 opacity-60 mix-blend-multiply" />
 
                             <div className="text-center relative z-10">
                                 <h2 className="text-sm font-body tracking-[0.3em] uppercase mb-3" style={{ color: 'rgba(74, 28, 28, 0.7)' }}>The Big Day Is</h2>
@@ -175,8 +174,8 @@ export default function PelliEventPage({ event }: EventPageProps) {
                     <TiltCard className="max-w-2xl mx-auto touch-manipulation">
                         <div className="bg-[var(--bg-primary)] p-6 sm:p-10 rounded-2xl sm:rounded-[2rem] shadow-lg border-t-4 border-[var(--accent-primary)] relative overflow-hidden">
                             {/* Traditional Corners on the card */}
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 opacity-40 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
-                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-10 h-10 sm:w-12 sm:h-12 opacity-40 mix-blend-multiply" style={{ transform: 'scale(-1, -1)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 opacity-40 mix-blend-multiply" style={{ transform: 'rotate(180deg)' }} />
+                            <img src="/assets/images/pelli/corner_borders.png" alt="" className="absolute top-0 right-0 w-10 h-10 sm:w-12 sm:h-12 opacity-40 mix-blend-multiply" style={{ transform: 'scaleY(-1)' }} />
                             <div className="relative z-10 text-center mb-6 sm:mb-8">
                                 <h2 className="text-2xl sm:text-4xl font-heading text-[var(--accent-primary)] mb-3">You're Invited</h2>
                                 <p className="font-body text-sm sm:text-base" style={{ color: 'rgba(74, 28, 28, 0.7)' }}>Kindly let us know if you can join us.</p>

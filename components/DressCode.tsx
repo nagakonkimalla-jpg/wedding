@@ -23,7 +23,7 @@ export default function DressCode({ dressCode, theme }: DressCodeProps) {
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b border-l rounded-bl-lg" style={{ borderColor: `${theme.primary}25` }} />
           <div className="absolute bottom-3 right-3 w-6 h-6 border-b border-r rounded-br-lg" style={{ borderColor: `${theme.primary}25` }} />
 
-          <div className="text-4xl mb-4">👗</div>
+          <div className="text-4xl mb-4">🥻</div>
           <p
             className="text-xs uppercase tracking-[0.25em] font-body mb-3"
             style={{ color: theme.primary }}

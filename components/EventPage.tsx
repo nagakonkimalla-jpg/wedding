@@ -55,13 +55,12 @@ export default function EventPage({ event }: EventPageProps) {
 
       {/* Logo top-left — cropped to show monogram in rounded badge */}
       <div className="fixed top-3 left-3 sm:top-4 sm:left-4 z-40">
-        <div className="relative w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] md:w-[80px] md:h-[80px] rounded-full overflow-hidden shadow-lg">
+        <div className="relative w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] md:w-[80px] md:h-[80px] rounded-full overflow-hidden shadow-lg bg-white border border-gray-200/30">
           <Image
-            src="/images/logo.png"
+            src="/assets/images/pelli/logo.jpeg"
             alt="N & A"
             fill
             className="object-cover"
-            style={{ objectPosition: "50% 42%" }}
           />
         </div>
       </div>
