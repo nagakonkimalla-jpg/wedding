@@ -83,88 +83,12 @@ function Twinkle({ size, color }: { size: number; color: string }) {
   );
 }
 
-// Grand reveal sound — rising whoosh with shimmering impact
+// Play reveal sound effect from audio file
 function playCelebrationSound() {
   try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    const ctx = new AudioCtx();
-    const t = ctx.currentTime;
-
-    // --- WHOOSH: filtered noise sweep rising upward ---
-    const noiseLen = 1.2;
-    const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * noiseLen, ctx.sampleRate);
-    const noiseData = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < noiseData.length; i++) {
-      noiseData[i] = (Math.random() * 2 - 1);
-    }
-    const noiseSrc = ctx.createBufferSource();
-    noiseSrc.buffer = noiseBuffer;
-
-    const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = "bandpass";
-    noiseFilter.Q.value = 2;
-    // Sweep filter from low rumble to high hiss
-    noiseFilter.frequency.setValueAtTime(200, t);
-    noiseFilter.frequency.exponentialRampToValueAtTime(6000, t + 0.7);
-    noiseFilter.frequency.exponentialRampToValueAtTime(800, t + 1.2);
-
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0, t);
-    noiseGain.gain.linearRampToValueAtTime(0.35, t + 0.15);
-    noiseGain.gain.linearRampToValueAtTime(0.45, t + 0.5);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
-
-    noiseSrc.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(ctx.destination);
-    noiseSrc.start(t);
-    noiseSrc.stop(t + noiseLen);
-
-    // --- RISING TONE: dramatic pitch sweep ---
-    const rise = ctx.createOscillator();
-    const riseGain = ctx.createGain();
-    rise.type = "sawtooth";
-    rise.frequency.setValueAtTime(120, t);
-    rise.frequency.exponentialRampToValueAtTime(1200, t + 0.65);
-    rise.frequency.exponentialRampToValueAtTime(600, t + 1.0);
-    riseGain.gain.setValueAtTime(0, t);
-    riseGain.gain.linearRampToValueAtTime(0.12, t + 0.1);
-    riseGain.gain.linearRampToValueAtTime(0.18, t + 0.55);
-    riseGain.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
-    rise.connect(riseGain);
-    riseGain.connect(ctx.destination);
-    rise.start(t);
-    rise.stop(t + 1.0);
-
-    // --- IMPACT: bright shimmer chord at the peak ---
-    const impactDelay = 0.55;
-    [880, 1320, 1760, 2640].forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      const vol = [0.25, 0.18, 0.12, 0.06][i];
-      gain.gain.setValueAtTime(0, t + impactDelay);
-      gain.gain.linearRampToValueAtTime(vol, t + impactDelay + 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + impactDelay + 0.8);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(t + impactDelay);
-      osc.stop(t + impactDelay + 0.8);
-    });
-
-    // --- SUB BOOM: low thump at impact ---
-    const boom = ctx.createOscillator();
-    const boomGain = ctx.createGain();
-    boom.type = "sine";
-    boom.frequency.setValueAtTime(80, t + impactDelay);
-    boom.frequency.exponentialRampToValueAtTime(30, t + impactDelay + 0.4);
-    boomGain.gain.setValueAtTime(0.3, t + impactDelay);
-    boomGain.gain.exponentialRampToValueAtTime(0.001, t + impactDelay + 0.4);
-    boom.connect(boomGain);
-    boomGain.connect(ctx.destination);
-    boom.start(t + impactDelay);
-    boom.stop(t + impactDelay + 0.4);
+    const audio = new Audio("/audio/reveal.mp3");
+    audio.volume = 1.0;
+    audio.play().catch(() => {});
   } catch {
     // silent fallback
   }
