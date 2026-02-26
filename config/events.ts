@@ -216,7 +216,7 @@ export const events: Record<string, EventInfo> = {
   pelli: {
     slug: "pelli",
     title: "Vivaham — The Wedding",
-    subtitle: "పెళ్ళి",
+    subtitle: "వివాహం",
     tagline: "Two souls, one beautiful journey",
     date: "2026-04-23",
     time: "Sumuhurtham at 9:23 AM",
