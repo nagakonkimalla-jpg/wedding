@@ -18,37 +18,52 @@ interface Sparkle {
   opacity: number;
 }
 
-// Two layers: fast inner burst + slow outer drift
+// Three layers: fast inner burst + medium ring + slow outer drift
 function generateSparkles(): Sparkle[] {
   const sparkles: Sparkle[] = [];
-  // Inner fast burst — 16 sparkles
-  for (let i = 0; i < 16; i++) {
-    const angle = (i / 16) * 360 + (Math.random() - 0.5) * 15;
-    const dist = 60 + Math.random() * 100;
+  // Inner fast burst — 24 sparkles
+  for (let i = 0; i < 24; i++) {
+    const angle = (i / 24) * 360 + (Math.random() - 0.5) * 15;
+    const dist = 80 + Math.random() * 160;
     const rad = (angle * Math.PI) / 180;
     sparkles.push({
       id: i,
       x: Math.cos(rad) * dist,
       y: Math.sin(rad) * dist,
-      size: 14 + Math.random() * 10,
-      delay: Math.random() * 0.08,
-      duration: 0.5 + Math.random() * 0.3,
+      size: 16 + Math.random() * 14,
+      delay: Math.random() * 0.1,
+      duration: 0.6 + Math.random() * 0.3,
       opacity: 0.9 + Math.random() * 0.1,
     });
   }
-  // Outer slow drift — 12 larger sparkles
-  for (let i = 0; i < 12; i++) {
-    const angle = (i / 12) * 360 + (Math.random() - 0.5) * 30;
-    const dist = 140 + Math.random() * 180;
+  // Medium ring — 20 sparkles
+  for (let i = 0; i < 20; i++) {
+    const angle = (i / 20) * 360 + (Math.random() - 0.5) * 20;
+    const dist = 200 + Math.random() * 250;
     const rad = (angle * Math.PI) / 180;
     sparkles.push({
-      id: 16 + i,
+      id: 24 + i,
       x: Math.cos(rad) * dist,
       y: Math.sin(rad) * dist,
-      size: 20 + Math.random() * 16,
-      delay: 0.05 + Math.random() * 0.15,
-      duration: 0.8 + Math.random() * 0.4,
-      opacity: 0.7 + Math.random() * 0.3,
+      size: 22 + Math.random() * 18,
+      delay: 0.03 + Math.random() * 0.12,
+      duration: 0.7 + Math.random() * 0.4,
+      opacity: 0.8 + Math.random() * 0.2,
+    });
+  }
+  // Outer slow drift — 16 large sparkles that reach screen edges
+  for (let i = 0; i < 16; i++) {
+    const angle = (i / 16) * 360 + (Math.random() - 0.5) * 25;
+    const dist = 400 + Math.random() * 350;
+    const rad = (angle * Math.PI) / 180;
+    sparkles.push({
+      id: 44 + i,
+      x: Math.cos(rad) * dist,
+      y: Math.sin(rad) * dist,
+      size: 28 + Math.random() * 24,
+      delay: 0.06 + Math.random() * 0.18,
+      duration: 0.9 + Math.random() * 0.5,
+      opacity: 0.6 + Math.random() * 0.3,
     });
   }
   return sparkles;
@@ -68,6 +83,52 @@ function Twinkle({ size, color }: { size: number; color: string }) {
   );
 }
 
+// Play a celebratory bell-chime sound
+function playCelebrationSound() {
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new AudioCtx();
+
+    // Bell tone 1 — lower
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = "sine";
+    osc1.frequency.value = 880;
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.5);
+
+    // Bell tone 2 — higher harmonic, slight delay
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "sine";
+    osc2.frequency.value = 1320;
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    gain2.gain.setValueAtTime(0.2, ctx.currentTime + 0.05);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+    osc2.start(ctx.currentTime + 0.05);
+    osc2.stop(ctx.currentTime + 0.45);
+
+    // Shimmer overtone
+    const osc3 = ctx.createOscillator();
+    const gain3 = ctx.createGain();
+    osc3.type = "sine";
+    osc3.frequency.value = 2640;
+    osc3.connect(gain3);
+    gain3.connect(ctx.destination);
+    gain3.gain.setValueAtTime(0.08, ctx.currentTime + 0.02);
+    gain3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc3.start(ctx.currentTime + 0.02);
+    osc3.stop(ctx.currentTime + 0.3);
+  } catch {
+    // silent fallback
+  }
+}
+
 export default function SplashScreen({ onEnter }: SplashScreenProps) {
   const [exiting, setExiting] = useState(false);
   const [burstOrigin, setBurstOrigin] = useState({ x: 0, y: 0 });
@@ -77,24 +138,13 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (exiting) return;
 
-      // Haptic feedback on Android; subtle tap sound on all devices (incl. iOS)
+      // Haptic feedback on Android
       if (navigator.vibrate) {
         navigator.vibrate([30, 50, 20]);
       }
-      try {
-        const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 1800;
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.06);
-      } catch {
-        // silent fallback
-      }
+
+      // Celebratory bell chime
+      playCelebrationSound();
 
       const rect = e.currentTarget.getBoundingClientRect();
       setBurstOrigin({
@@ -104,7 +154,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
       setExiting(true);
       setTimeout(() => {
         onEnter();
-      }, prefersReducedMotion ? 400 : 1100);
+      }, prefersReducedMotion ? 400 : 1200);
     },
     [exiting, onEnter, prefersReducedMotion]
   );
@@ -124,7 +174,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
         transition={{
           duration: prefersReducedMotion ? 0.3 : 0.8,
           ease: [0.4, 0, 0.2, 1],
-          delay: prefersReducedMotion ? 0.15 : 0.55,
+          delay: prefersReducedMotion ? 0.15 : 0.6,
         }}
       >
         <div className="absolute inset-0 pattern-overlay opacity-50" />
@@ -137,26 +187,44 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
         transition={{
           duration: prefersReducedMotion ? 0.3 : 0.8,
           ease: [0.4, 0, 0.2, 1],
-          delay: prefersReducedMotion ? 0.15 : 0.55,
+          delay: prefersReducedMotion ? 0.15 : 0.6,
         }}
       >
         <div className="absolute inset-0 pattern-overlay opacity-50" />
       </motion.div>
 
-      {/* Warm gold flash pulse */}
+      {/* Full-screen gold flash pulse */}
       {exiting && !prefersReducedMotion && (
         <motion.div
           className="fixed inset-0 pointer-events-none z-[15]"
           initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.25, 0.1, 0] }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          animate={{ opacity: [0, 0.35, 0.15, 0] }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           style={{
-            background: `radial-gradient(circle at ${burstOrigin.x}px ${burstOrigin.y}px, rgba(212,160,23,0.5) 0%, rgba(212,160,23,0.15) 35%, transparent 65%)`,
+            background: `radial-gradient(circle at ${burstOrigin.x}px ${burstOrigin.y}px, rgba(212,175,55,0.6) 0%, rgba(212,160,23,0.25) 30%, rgba(212,160,23,0.08) 55%, transparent 80%)`,
           }}
         />
       )}
 
-      {/* Sparkle burst */}
+      {/* Expanding ring wave */}
+      {exiting && !prefersReducedMotion && (
+        <motion.div
+          className="fixed pointer-events-none z-[16] rounded-full border-2 border-[#D4A017]"
+          style={{
+            left: burstOrigin.x,
+            top: burstOrigin.y,
+            marginLeft: -20,
+            marginTop: -20,
+            width: 40,
+            height: 40,
+          }}
+          initial={{ scale: 1, opacity: 0.6 }}
+          animate={{ scale: 30, opacity: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        />
+      )}
+
+      {/* Sparkle burst — covers full screen */}
       {exiting && !prefersReducedMotion && (
         <div
           className="fixed pointer-events-none z-30"
@@ -175,7 +243,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
                 x: s.x,
                 y: s.y,
                 opacity: [0, s.opacity, s.opacity * 0.6, 0],
-                scale: [0, 1.3, 0.8, 0],
+                scale: [0, 1.4, 0.9, 0],
               }}
               transition={{
                 duration: s.duration,

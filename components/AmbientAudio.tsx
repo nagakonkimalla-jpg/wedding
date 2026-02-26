@@ -11,6 +11,7 @@ interface AmbientAudioProps {
 export default function AmbientAudio({ audioPath, startTime = 0 }: AmbientAudioProps) {
     const [isPlaying, setIsPlaying] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const triedAutoplay = useRef(false);
 
     useEffect(() => {
         // Default to on unless user explicitly muted
@@ -43,10 +44,20 @@ export default function AmbientAudio({ audioPath, startTime = 0 }: AmbientAudioP
         if (!audioRef.current) return;
 
         if (isPlaying) {
-            audioRef.current.play().catch(e => {
-                // Auto-play was prevented
-                console.warn("Autoplay prevented", e);
-                setIsPlaying(false);
+            audioRef.current.play().catch(() => {
+                // Autoplay blocked — resume on first user interaction
+                if (!triedAutoplay.current) {
+                    triedAutoplay.current = true;
+                    const resumeOnInteraction = () => {
+                        if (audioRef.current && isPlaying) {
+                            audioRef.current.play().catch(() => {});
+                        }
+                        document.removeEventListener('click', resumeOnInteraction);
+                        document.removeEventListener('touchstart', resumeOnInteraction);
+                    };
+                    document.addEventListener('click', resumeOnInteraction, { once: true });
+                    document.addEventListener('touchstart', resumeOnInteraction, { once: true });
+                }
             });
             localStorage.setItem('wedding-audio-unmuted', 'true');
         } else {

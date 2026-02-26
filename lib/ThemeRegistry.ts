@@ -28,7 +28,7 @@ export const THEME_REGISTRY: Record<ThemeKey, ThemeConfig> = {
   },
   pelli: {
     key: 'pelli',
-    name: 'Pelli',
+    name: 'Vivaham',
     colors: {
       primary: '#FAF5E9',
       secondary: '#4A1C1C',

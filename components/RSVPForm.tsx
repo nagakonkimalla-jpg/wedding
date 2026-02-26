@@ -52,7 +52,7 @@ export default function RSVPForm({ event }: RSVPFormProps) {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "numberOfGuests" ? parseInt(value) || 1 : name === "numberOfKids" ? parseInt(value) || 0 : value,
+      [name]: name === "numberOfGuests" || name === "numberOfKids" ? parseInt(value) : value,
     }));
   };
 
@@ -73,6 +73,8 @@ export default function RSVPForm({ event }: RSVPFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          numberOfGuests: formData.numberOfGuests || 1,
+          numberOfKids: formData.numberOfKids || 0,
           timestamp: new Date().toISOString(),
         }),
       });
@@ -229,7 +231,7 @@ export default function RSVPForm({ event }: RSVPFormProps) {
                 <input
                   type="number"
                   name="numberOfGuests"
-                  value={formData.numberOfGuests}
+                  value={isNaN(formData.numberOfGuests) ? "" : formData.numberOfGuests}
                   onChange={handleChange}
                   min={1}
                   max={10}
@@ -244,7 +246,7 @@ export default function RSVPForm({ event }: RSVPFormProps) {
                 <input
                   type="number"
                   name="numberOfKids"
-                  value={formData.numberOfKids}
+                  value={isNaN(formData.numberOfKids) ? "" : formData.numberOfKids}
                   onChange={handleChange}
                   min={0}
                   max={10}
