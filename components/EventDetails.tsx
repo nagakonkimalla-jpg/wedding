@@ -40,7 +40,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
     { icon: "\u{1F550}", label: "Time", value: event.time },
     { icon: "\u{1F4CD}", label: "Venue", value: event.venue },
     ...(event.dressCode
-      ? [{ icon: "🥻", label: "Attire", value: event.dressCode }]
+      ? [{ icon: event.dressCode.toLowerCase().includes("glamorous") || event.dressCode.toLowerCase().includes("indo-western") ? "✨" : event.dressCode.toLowerCase().includes("formal") || event.dressCode.toLowerCase().includes("western attire") ? "👔" : "🥻", label: "Attire", value: event.dressCode }]
       : []),
   ];
 

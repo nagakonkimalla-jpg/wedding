@@ -38,6 +38,13 @@ export default function RSVPForm({ event }: RSVPFormProps) {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
+  const [alreadyRsvpd, setAlreadyRsvpd] = useState<{ email: string; willAttend: string } | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const rsvpEvents = JSON.parse(localStorage.getItem("wedding-rsvp-events") || "{}");
+      return rsvpEvents[event.slug] || null;
+    } catch { return null; }
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -86,6 +93,12 @@ export default function RSVPForm({ event }: RSVPFormProps) {
             willAttend: formData.willAttend,
             dietaryRestrictions: formData.dietaryRestrictions,
           }));
+          // Track which events have been RSVP'd (keyed by email)
+          const rsvpEntry = { email: formData.email, willAttend: formData.willAttend };
+          const rsvpEvents = JSON.parse(localStorage.getItem("wedding-rsvp-events") || "{}");
+          rsvpEvents[event.slug] = rsvpEntry;
+          localStorage.setItem("wedding-rsvp-events", JSON.stringify(rsvpEvents));
+          setAlreadyRsvpd(rsvpEntry);
         } catch {}
         setFormData({
           fullName: "",
@@ -132,6 +145,21 @@ export default function RSVPForm({ event }: RSVPFormProps) {
             <p className="font-body text-sm mt-2 opacity-60" style={{ color: event.theme.text }}>
               We would love to have you celebrate with us
             </p>
+            {alreadyRsvpd && (
+              <div
+                className="inline-flex items-center gap-1.5 mt-3 px-4 py-1.5 rounded-full text-xs font-body tracking-wide"
+                style={{
+                  backgroundColor: `${event.theme.primary}15`,
+                  color: event.theme.primary,
+                  border: `1px solid ${event.theme.primary}30`,
+                }}
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                {alreadyRsvpd.willAttend === "yes" ? "You've RSVP'd — Attending" : "You've RSVP'd — Not Attending"}
+              </div>
+            )}
           </div>
 
           <div

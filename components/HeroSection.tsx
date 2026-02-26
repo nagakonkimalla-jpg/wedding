@@ -394,7 +394,7 @@ export default function HeroSection({ event }: HeroSectionProps) {
           src={event.heroImage}
           alt={event.title}
           fill
-          className="object-cover"
+          className={event.slug === "sangeeth" ? "object-contain sm:object-cover" : "object-cover"}
           style={{ objectPosition: event.slug === "sangeeth" ? "center 70%" : undefined }}
           priority
           sizes="100vw"

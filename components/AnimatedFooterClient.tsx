@@ -19,10 +19,19 @@ export default function AnimatedFooterClient() {
       viewport={{ once: true }}
       transition={{ duration: prefersReducedMotion ? 0.2 : 0.6 }}
     >
+      {/* Decorative diya */}
+      <div className="flex justify-center mb-6">
+        <svg width="48" height="48" viewBox="0 0 40 40" className="opacity-30">
+          <ellipse cx="20" cy="32" rx="10" ry="4" fill="#D4A017" opacity="0.4" />
+          <path d="M12 30 Q10 32 12 34 L28 34 Q30 32 28 30Z" fill="#D4A017" opacity="0.3" />
+          <path d="M20 10 Q24 18 22 24 Q20 28 18 24 Q16 18 20 10Z" fill="#D4A017" opacity="0.5" />
+          <path d="M20 14 Q22 19 21 23 Q20 25 19 23 Q18 19 20 14Z" fill="#B8860B" opacity="0.6" />
+        </svg>
+      </div>
       <div className="flex items-center justify-center gap-3 mb-4">
-        <div className="w-12 h-[1px] bg-[#D4A017]" />
+        <div className="w-16 h-[1px] bg-gradient-to-r from-transparent to-[#D4A017]" />
         <span className="text-[#D4A017] text-xl">&#x2665;</span>
-        <div className="w-12 h-[1px] bg-[#D4A017]" />
+        <div className="w-16 h-[1px] bg-gradient-to-l from-transparent to-[#D4A017]" />
       </div>
       <p className="font-script text-3xl text-[#B8860B]">
         Neelu &amp; Aditya

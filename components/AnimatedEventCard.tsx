@@ -43,10 +43,16 @@ export default function AnimatedEventCard({
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  const [rsvpd, setRsvpd] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     setIsMobile(window.matchMedia("(pointer: coarse)").matches);
-  }, []);
+    try {
+      const rsvpEvents = JSON.parse(localStorage.getItem("wedding-rsvp-events") || "{}");
+      if (rsvpEvents[slug]) setRsvpd(true);
+    } catch {}
+  }, [slug]);
 
   return (
     <motion.div
@@ -79,6 +85,16 @@ export default function AnimatedEventCard({
 
               {/* Gold shimmer on hover */}
               <div className="absolute inset-0 gold-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* RSVP'd indicator */}
+              {rsvpd && (
+                <div className={`absolute top-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-body font-semibold tracking-wider uppercase ${isLight ? "bg-white/80 text-[#B8860B]" : "bg-white/20 text-white"} backdrop-blur-sm`}>
+                  <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  RSVP'd
+                </div>
+              )}
 
               {/* Content */}
               <div className="relative z-10">

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendRSVP, DuplicateError } from "@/lib/googleSheets";
+import { getEvent } from "@/config/events";
+import { sendConfirmationEmail } from "@/lib/sendConfirmationEmail";
 import { RSVPFormData } from "@/types";
 
 export async function POST(request: NextRequest) {
@@ -28,6 +30,16 @@ export async function POST(request: NextRequest) {
     };
 
     await appendRSVP(rsvpData);
+
+    // Send confirmation email (fire-and-forget — don't block RSVP response)
+    if (rsvpData.email) {
+      const event = getEvent(rsvpData.eventSlug);
+      if (event) {
+        sendConfirmationEmail(rsvpData, event).catch((err) => {
+          console.error("Failed to send confirmation email:", err);
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,
