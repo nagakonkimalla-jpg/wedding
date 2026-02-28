@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
 
 interface AmbientAudioProps {
@@ -11,19 +11,31 @@ interface AmbientAudioProps {
 export default function AmbientAudio({ audioPath, startTime = 0 }: AmbientAudioProps) {
     const [isPlaying, setIsPlaying] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const triedAutoplay = useRef(false);
+    const isPlayingRef = useRef(true);
+    const hasPlayedRef = useRef(false);
+
+    // Keep ref in sync with state
+    useEffect(() => {
+        isPlayingRef.current = isPlaying;
+    }, [isPlaying]);
+
+    // Try to play audio — returns true if successful
+    const tryPlay = useCallback(async () => {
+        if (!audioRef.current || !isPlayingRef.current || hasPlayedRef.current) return;
+        try {
+            await audioRef.current.play();
+            hasPlayedRef.current = true;
+        } catch {
+            // Autoplay blocked — will retry on user interaction
+        }
+    }, []);
 
     useEffect(() => {
-        // Default to on unless user explicitly muted
-        const storedPreference = localStorage.getItem('wedding-audio-unmuted');
-        if (storedPreference === 'false') {
-            setIsPlaying(false);
-        }
-
         const audio = new Audio(audioPath);
         audio.currentTime = startTime;
         audio.loop = false;
         audio.volume = 0.3;
+        audio.preload = "auto";
         audioRef.current = audio;
 
         // Loop back to startTime instead of beginning
@@ -33,10 +45,39 @@ export default function AmbientAudio({ audioPath, startTime = 0 }: AmbientAudioP
         };
         audio.addEventListener('ended', handleEnded);
 
+        // Resume on any user interaction (handles autoplay blocking)
+        const resumeOnInteraction = () => {
+            if (audioRef.current && isPlayingRef.current && !hasPlayedRef.current) {
+                audioRef.current.play().then(() => {
+                    hasPlayedRef.current = true;
+                    // Clean up listeners once playing
+                    document.removeEventListener('click', resumeOnInteraction);
+                    document.removeEventListener('touchstart', resumeOnInteraction);
+                    document.removeEventListener('scroll', resumeOnInteraction);
+                }).catch(() => {});
+            }
+        };
+
+        // Try autoplay immediately
+        if (isPlayingRef.current) {
+            audio.play().then(() => {
+                hasPlayedRef.current = true;
+            }).catch(() => {
+                // Blocked — set up interaction listeners
+                document.addEventListener('click', resumeOnInteraction);
+                document.addEventListener('touchstart', resumeOnInteraction);
+                document.addEventListener('scroll', resumeOnInteraction, { passive: true });
+            });
+        }
+
         return () => {
             audio.removeEventListener('ended', handleEnded);
+            document.removeEventListener('click', resumeOnInteraction);
+            document.removeEventListener('touchstart', resumeOnInteraction);
+            document.removeEventListener('scroll', resumeOnInteraction);
             audio.pause();
             audioRef.current = null;
+            hasPlayedRef.current = false;
         };
     }, [audioPath, startTime]);
 
@@ -44,21 +85,9 @@ export default function AmbientAudio({ audioPath, startTime = 0 }: AmbientAudioP
         if (!audioRef.current) return;
 
         if (isPlaying) {
-            audioRef.current.play().catch(() => {
-                // Autoplay blocked — resume on first user interaction
-                if (!triedAutoplay.current) {
-                    triedAutoplay.current = true;
-                    const resumeOnInteraction = () => {
-                        if (audioRef.current && isPlaying) {
-                            audioRef.current.play().catch(() => {});
-                        }
-                        document.removeEventListener('click', resumeOnInteraction);
-                        document.removeEventListener('touchstart', resumeOnInteraction);
-                    };
-                    document.addEventListener('click', resumeOnInteraction, { once: true });
-                    document.addEventListener('touchstart', resumeOnInteraction, { once: true });
-                }
-            });
+            audioRef.current.play().then(() => {
+                hasPlayedRef.current = true;
+            }).catch(() => {});
             localStorage.setItem('wedding-audio-unmuted', 'true');
         } else {
             audioRef.current.pause();

@@ -106,13 +106,13 @@ export const events: Record<string, EventInfo> = {
     description:
       "Get ready for an unforgettable evening of music, dance performances, and celebration as families come together to honor the couple with song and joy.",
     theme: {
-      primary: "#A855F7",
-      secondary: "#C084FC",
+      primary: "#94A3B8",
+      secondary: "#CBD5E1",
       accent: "#D4AF37",
-      bg: "#14082A",
-      cardBg: "#1F1044",
-      text: "#F3E8FF",
-      gradient: "from-purple-500 via-fuchsia-500 to-purple-600",
+      bg: "#0F172A",
+      cardBg: "#1E293B",
+      text: "#E2E8F0",
+      gradient: "from-slate-400 via-gray-300 to-slate-400",
     },
     heroImage: "/images/shared/DSC05897.jpg",
     galleryImages: [
@@ -242,7 +242,7 @@ export const events: Record<string, EventInfo> = {
       "/images/pelli/DSC05476-2-Edit.jpg",
       "/images/pelli/DSC05872.jpg",
     ],
-    decorativeEmoji: "💍",
+    decorativeEmoji: "✨",
     venueImage: "/images/temple.jpg",
   },
   "satyanarayana-swami-vratam-aditya": {

@@ -146,37 +146,37 @@ function HeroDecorations({ eventSlug }: { eventSlug: string }) {
       case "sangeeth":
         return (
           <>
-            {/* Musical notes — purple + gold accent */}
+            {/* Musical notes — silver + gold accent */}
             <svg className="absolute top-[15%] left-[10%] w-8 h-8 sm:w-12 sm:h-12 opacity-25" viewBox="0 0 40 40" style={{ animation: "hero-float-1 6s ease-in-out infinite" }}>
-              <circle cx="12" cy="30" r="5" fill="#C084FC" />
-              <rect x="16" y="8" width="2" height="22" fill="#C084FC" />
-              <path d="M18 8 Q28 6 24 16" stroke="#C084FC" strokeWidth="2" fill="none" />
+              <circle cx="12" cy="30" r="5" fill="#CBD5E1" />
+              <rect x="16" y="8" width="2" height="22" fill="#CBD5E1" />
+              <path d="M18 8 Q28 6 24 16" stroke="#CBD5E1" strokeWidth="2" fill="none" />
             </svg>
             <svg className="absolute top-[20%] right-[12%] w-6 h-6 sm:w-10 sm:h-10 opacity-20" viewBox="0 0 40 40" style={{ animation: "hero-float-2 8s ease-in-out infinite" }}>
-              <circle cx="10" cy="30" r="4" fill="#A855F7" />
-              <rect x="13" y="10" width="2" height="20" fill="#A855F7" />
-              <circle cx="28" cy="26" r="4" fill="#A855F7" />
-              <rect x="31" y="6" width="2" height="20" fill="#A855F7" />
-              <rect x="13" y="6" width="22" height="2" fill="#A855F7" />
+              <circle cx="10" cy="30" r="4" fill="#94A3B8" />
+              <rect x="13" y="10" width="2" height="20" fill="#94A3B8" />
+              <circle cx="28" cy="26" r="4" fill="#94A3B8" />
+              <rect x="31" y="6" width="2" height="20" fill="#94A3B8" />
+              <rect x="13" y="6" width="22" height="2" fill="#94A3B8" />
             </svg>
-            {/* Gold foil sparkle stars */}
+            {/* Silver sparkle stars */}
             <svg className="absolute bottom-[30%] left-[18%] w-6 h-6 sm:w-8 sm:h-8 opacity-30" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 2s ease-in-out infinite" }}>
               <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#D4AF37" />
             </svg>
             <svg className="absolute top-[40%] right-[8%] w-5 h-5 sm:w-7 sm:h-7 opacity-25" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 2s ease-in-out infinite 0.7s" }}>
-              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#D4AF37" />
+              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#E2E8F0" />
             </svg>
             <svg className="absolute bottom-[38%] right-[22%] w-7 h-7 sm:w-9 sm:h-9 opacity-20" viewBox="0 0 40 40" style={{ animation: "hero-float-3 5s ease-in-out infinite" }}>
-              <circle cx="14" cy="28" r="5" fill="#C084FC" />
-              <rect x="18" y="6" width="2" height="22" fill="#C084FC" />
-              <path d="M20 6 Q30 4 26 14" stroke="#C084FC" strokeWidth="2" fill="none" />
+              <circle cx="14" cy="28" r="5" fill="#CBD5E1" />
+              <rect x="18" y="6" width="2" height="22" fill="#CBD5E1" />
+              <path d="M20 6 Q30 4 26 14" stroke="#CBD5E1" strokeWidth="2" fill="none" />
             </svg>
-            {/* Additional gold foil speckles */}
+            {/* Additional silver/gold sparkles */}
             <svg className="absolute top-[30%] left-[5%] w-4 h-4 opacity-20" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 3s ease-in-out infinite 1.2s" }}>
               <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#D4AF37" />
             </svg>
             <svg className="absolute bottom-[42%] left-[25%] w-3 h-3 opacity-15" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 2.5s ease-in-out infinite 0.3s" }}>
-              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#D4AF37" />
+              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#E2E8F0" />
             </svg>
           </>
         );
@@ -409,8 +409,13 @@ export default function HeroSection({ event }: HeroSectionProps) {
         }}
       />
 
-      {/* Cinematic light overlay overlay instead of dark */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#FDFBF7]/40 via-[#FDFBF7]/30 to-[#FDFBF7]/80" />
+      {/* Cinematic overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(to bottom, ${event.theme.bg}66, ${event.theme.bg}4D, ${event.theme.bg}CC)`,
+        }}
+      />
       <div
         className="absolute inset-0"
         style={{

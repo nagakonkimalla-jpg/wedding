@@ -42,18 +42,7 @@ export async function appendRSVP(data: RSVPFormData): Promise<void> {
     throw new Error(`Apps Script returned unexpected response: ${text.substring(0, 200)}`);
   }
 
-  if (result.status === "duplicate") {
-    throw new DuplicateError("Already RSVP'd");
-  }
-
   if (result.status === "error") {
     throw new Error(`Apps Script error: ${result.message}`);
-  }
-}
-
-export class DuplicateError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "DuplicateError";
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendRSVP, DuplicateError } from "@/lib/googleSheets";
+import { appendRSVP } from "@/lib/googleSheets";
 import { getEvent } from "@/config/events";
 import { sendConfirmationEmail } from "@/lib/sendConfirmationEmail";
 import { RSVPFormData } from "@/types";
@@ -85,6 +85,8 @@ export async function POST(request: NextRequest) {
       userMessage = "RSVP is not available right now. Please contact us directly to RSVP.";
     } else if (errMsg.includes("Apps Script error")) {
       userMessage = "There was an issue saving your RSVP. Please try again or contact us directly.";
+    } else if (errMsg.includes("unexpected response")) {
+      userMessage = "Our RSVP service returned an unexpected response. Please try again in a moment.";
     }
 
     return NextResponse.json(

@@ -83,16 +83,6 @@ function Twinkle({ size, color }: { size: number; color: string }) {
   );
 }
 
-// Play reveal sound effect from audio file
-function playCelebrationSound() {
-  try {
-    const audio = new Audio("/audio/reveal.mp3");
-    audio.volume = 1.0;
-    audio.play().catch(() => {});
-  } catch {
-    // silent fallback
-  }
-}
 
 export default function SplashScreen({ onEnter }: SplashScreenProps) {
   const [exiting, setExiting] = useState(false);
@@ -107,9 +97,6 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
       if (navigator.vibrate) {
         navigator.vibrate([30, 50, 20]);
       }
-
-      // Celebratory bell chime
-      playCelebrationSound();
 
       const rect = e.currentTarget.getBoundingClientRect();
       setBurstOrigin({
