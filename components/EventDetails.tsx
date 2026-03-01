@@ -48,7 +48,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
           if (dc.includes("glamorous") || dc.includes("indo-western")) return "✨";
           if (dc.includes("formal") || dc.includes("western attire")) return "👔";
           return "🥻";
-        })(), label: "Attire", value: event.dressCode }]
+        })(), label: "Suggested Attire", value: event.dressCode }]
       : []),
   ];
 
