@@ -1,16 +1,42 @@
 import { EventTheme } from "@/types";
+import Image from "next/image";
 
 interface DressCodeProps {
   dressCode: string;
   theme: EventTheme;
 }
 
-function getAttireEmoji(dressCode: string): string {
+function getAttireEmoji(dressCode: string) {
   const lower = dressCode.toLowerCase();
-  if (lower.includes("glamorous") || lower.includes("indo-western")) return "✨";
-  if (lower.includes("formal") || lower.includes("western")) return "👔";
-  if (lower.includes("kurta") && lower.includes("saree")) return "👔 🥻";
-  return "🥻";
+
+  if (lower.includes("kurta") && lower.includes("saree")) {
+    return (
+      <div className="flex items-center justify-center gap-6 mb-6 mt-2">
+        <div className="relative w-16 h-16 sm:w-20 sm:h-20 drop-shadow-md">
+          <Image
+            src="/images/shared/kurta_icon.png"
+            alt="Kurta"
+            fill
+            className="object-contain"
+          />
+        </div>
+        <div className="relative w-16 h-16 sm:w-20 sm:h-20 drop-shadow-md">
+          <Image
+            src="/images/shared/saree_icon.png"
+            alt="Saree"
+            fill
+            className="object-contain"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  let emoji = "🥻";
+  if (lower.includes("glamorous") || lower.includes("indo-western")) emoji = "✨";
+  if (lower.includes("formal") || lower.includes("western")) emoji = "👔";
+
+  return <div className="text-5xl mb-4">{emoji}</div>;
 }
 
 export default function DressCode({ dressCode, theme }: DressCodeProps) {
@@ -31,7 +57,7 @@ export default function DressCode({ dressCode, theme }: DressCodeProps) {
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b border-l rounded-bl-lg" style={{ borderColor: `${theme.primary}25` }} />
           <div className="absolute bottom-3 right-3 w-6 h-6 border-b border-r rounded-br-lg" style={{ borderColor: `${theme.primary}25` }} />
 
-          <div className="text-4xl mb-4">{getAttireEmoji(dressCode)}</div>
+          {getAttireEmoji(dressCode)}
           <p
             className="text-xs uppercase tracking-[0.25em] font-body mb-3"
             style={{ color: theme.primary }}
