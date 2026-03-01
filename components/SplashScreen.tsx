@@ -87,13 +87,14 @@ function Twinkle({ size, color }: { size: number; color: string }) {
 export default function SplashScreen({ onEnter }: SplashScreenProps) {
   const [exiting, setExiting] = useState(false);
   const [burstOrigin, setBurstOrigin] = useState({ x: 0, y: 0 });
+  const [isMuted, setIsMuted] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Play traditional music on splash screen
   useEffect(() => {
     const audio = new Audio("/audio/traditional.mp3");
-    audio.volume = 0.3;
+    audio.volume = 0.25;
     audio.loop = true;
     audioRef.current = audio;
 
@@ -111,6 +112,17 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
       audioRef.current = null;
     };
   }, []);
+
+  const toggleMute = useCallback(() => {
+    if (!audioRef.current) return;
+    if (isMuted) {
+      audioRef.current.volume = 0.25;
+      audioRef.current.play().catch(() => {});
+    } else {
+      audioRef.current.pause();
+    }
+    setIsMuted(!isMuted);
+  }, [isMuted]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -300,6 +312,30 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
           <circle cx="20" cy="20" r="5" fill="#D4A017" />
         </svg>
       </div>
+
+      {/* Music toggle — top right */}
+      <motion.button
+        onClick={toggleMute}
+        className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[#D4A017]/30 bg-white/80 backdrop-blur-sm flex items-center justify-center text-[#B8860B] hover:bg-[#D4A017]/10 transition-colors"
+        initial={{ opacity: 0 }}
+        animate={exiting ? { opacity: 0 } : { opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+        aria-label={isMuted ? "Unmute music" : "Mute music"}
+      >
+        {isMuted ? (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+          </svg>
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+        )}
+      </motion.button>
 
       {/* Logo — top left */}
       <motion.div
