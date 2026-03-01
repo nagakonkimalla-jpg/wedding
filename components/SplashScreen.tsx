@@ -313,10 +313,10 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
         </svg>
       </div>
 
-      {/* Music toggle — top right */}
+      {/* Music toggle — bottom left */}
       <motion.button
         onClick={toggleMute}
-        className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[#D4A017]/30 bg-white/80 backdrop-blur-sm flex items-center justify-center text-[#B8860B] hover:bg-[#D4A017]/10 transition-colors"
+        className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[#D4A017]/30 bg-white/80 backdrop-blur-sm flex items-center justify-center text-[#B8860B] hover:bg-[#D4A017]/10 transition-colors"
         initial={{ opacity: 0 }}
         animate={exiting ? { opacity: 0 } : { opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.5 }}
