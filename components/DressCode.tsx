@@ -9,7 +9,7 @@ interface DressCodeProps {
 function getAttireEmoji(dressCode: string) {
   const lower = dressCode.toLowerCase();
 
-  if (lower.includes("kurta") && lower.includes("saree")) {
+  if (lower.includes("yellow") && lower.includes("kurta") && lower.includes("saree")) {
     return (
       <div className="flex items-center justify-center gap-6 mb-6 mt-2">
         <div className="relative w-16 h-16 sm:w-20 sm:h-20 drop-shadow-md">
@@ -27,6 +27,58 @@ function getAttireEmoji(dressCode: string) {
             fill
             className="object-contain"
           />
+        </div>
+      </div>
+    );
+  }
+
+  if (lower.includes("saree") && lower.includes("lehenga") && (lower.includes("kurta") || lower.includes("sherwani") || lower.includes("suit"))) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-2 mb-6 mt-2">
+        {/* Women's Options */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 drop-shadow-md">
+            <Image
+              src="/images/shared/wedding_lehenga_icon.png"
+              alt="Lehenga"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <span className="text-sm font-medium text-[#8B1A1A]/60 italic">OR</span>
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 drop-shadow-md">
+            <Image
+              src="/images/shared/wedding_saree_icon.png"
+              alt="Wedding Saree"
+              fill
+              className="object-contain"
+            />
+          </div>
+        </div>
+
+        <div className="text-xs uppercase tracking-widest text-[#8B1A1A]/70 font-semibold my-2">
+          &mdash; AND &mdash;
+        </div>
+
+        {/* Men's Options */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="relative w-14 h-14 sm:w-16 sm:h-16 drop-shadow-md">
+            <Image
+              src="/images/shared/kurta_icon.png"
+              alt="Kurta"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <span className="text-sm font-medium text-[#8B1A1A]/60 italic">OR</span>
+          <div className="relative w-14 h-14 sm:w-16 sm:h-16 drop-shadow-md">
+            <Image
+              src="/images/shared/wedding_suit_icon.png"
+              alt="Suit"
+              fill
+              className="object-contain"
+            />
+          </div>
         </div>
       </div>
     );
