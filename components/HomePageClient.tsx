@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SplashScreen from "./SplashScreen";
+import AmbientAudio from "./AmbientAudio";
 
 const SESSION_KEY = "wedding-splash-seen";
 
@@ -41,6 +42,8 @@ export default function HomePageClient({
       <AnimatePresence>
         {showSplash && <SplashScreen onEnter={handleSplashEnter} />}
       </AnimatePresence>
+
+      {!showSplash && <AmbientAudio audioPath="/audio/traditional.mp3" />}
 
       {contentHidden ? (
         <motion.div

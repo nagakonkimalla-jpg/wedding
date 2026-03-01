@@ -9,6 +9,7 @@ function getAttireEmoji(dressCode: string): string {
   const lower = dressCode.toLowerCase();
   if (lower.includes("glamorous") || lower.includes("indo-western")) return "✨";
   if (lower.includes("formal") || lower.includes("western")) return "👔";
+  if (lower.includes("kurta") && lower.includes("saree")) return "👔 🥻";
   return "🥻";
 }
 

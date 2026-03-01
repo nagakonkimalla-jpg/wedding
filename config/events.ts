@@ -7,11 +7,11 @@ export const events: Record<string, EventInfo> = {
     subtitle: "నలుగు",
     tagline: "A celebration of turmeric blessings & joy",
     date: "2026-04-19",
-    time: "10:00 AM - 3:00 PM",
+    time: "9:00 AM - 3:00 PM (Lunch Follows)",
     venue: "The PalmTree House",
     venueAddress: "3670 Matt Hwy, Cumming, GA 30028",
     googleMapsUrl: "https://maps.google.com/?q=3670+Matt+Hwy+Cumming+GA+30028",
-    dressCode: "Yellow / Traditional Indian Attire",
+    dressCode: "Yellow Kurta (Men) / Yellow Saree (Women)",
     description:
       "Join us for the auspicious Haldi ceremony where turmeric paste is lovingly applied to the bride and groom, symbolizing purification and blessings for their new journey together.",
     theme: {
@@ -97,7 +97,7 @@ export const events: Record<string, EventInfo> = {
     subtitle: "సంగీత్",
     tagline: "A night of music, dance & celebration",
     date: "2026-04-21",
-    time: "6:00 PM - 11:00 PM",
+    time: "6:00 PM - 11:00 PM (Dinner Follows)",
     venue: "Bliss Events",
     venueAddress: "3170 Peachtree Parkway, Suwanee, GA 30024",
     googleMapsUrl:
@@ -221,7 +221,7 @@ export const events: Record<string, EventInfo> = {
     subtitle: "వివాహం",
     tagline: "Two souls, one beautiful journey",
     date: "2026-04-23",
-    time: "Sumuhurtham at 9:23 AM",
+    time: "6:30 AM - 12:30 PM (Lunch Follows)",
     venue: "Hindu Temple of Atlanta",
     venueAddress: "5851 GA-85, Riverdale, GA 30274",
     googleMapsUrl: "https://maps.google.com/?q=Hindu+Temple+of+Atlanta",
