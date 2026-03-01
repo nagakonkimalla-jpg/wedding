@@ -265,6 +265,16 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
         </svg>
       </div>
 
+      {/* Logo — top left */}
+      <motion.div
+        className="absolute top-6 left-6 sm:top-8 sm:left-8 z-20 w-[52px] h-[52px] sm:w-[64px] sm:h-[64px] rounded-full overflow-hidden shadow-lg bg-white border-2 border-[#D4A017]/30"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={exiting ? { opacity: 0, scale: 0.8 } : { opacity: 1, scale: 1 }}
+        transition={{ duration, delay: stagger * 0 }}
+      >
+        <Image src="/assets/images/pelli/logo.jpeg" alt="N & A" fill className="object-cover" />
+      </motion.div>
+
       {/* Center content */}
       <motion.div
         className="relative z-10 flex flex-col items-center px-6 text-center"
@@ -280,27 +290,17 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
       >
         {/* Deity images at top */}
         <motion.div
-          className="flex items-center justify-center gap-6 sm:gap-10 mb-4"
+          className="flex items-center justify-center gap-8 sm:gap-12 mb-6"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration, delay: stagger * 0 }}
         >
-          <div className="relative w-[70px] h-[55px] sm:w-[100px] sm:h-[80px]" style={{ filter: "drop-shadow(0 2px 8px rgba(212,160,23,0.3))" }}>
+          <div className="relative w-[100px] h-[80px] sm:w-[140px] sm:h-[110px] md:w-[160px] md:h-[130px]" style={{ filter: "drop-shadow(0 2px 10px rgba(212,160,23,0.3))" }}>
             <Image src="/images/shiva-family.png" alt="Shiva Kutumbam" fill className="object-contain" />
           </div>
-          <div className="relative w-[70px] h-[55px] sm:w-[100px] sm:h-[80px]" style={{ filter: "drop-shadow(0 2px 8px rgba(212,160,23,0.3))" }}>
+          <div className="relative w-[100px] h-[80px] sm:w-[140px] sm:h-[110px] md:w-[160px] md:h-[130px]" style={{ filter: "drop-shadow(0 2px 10px rgba(212,160,23,0.3))" }}>
             <Image src="/images/venkateswara.png" alt="Sri Venkateswara Swamy" fill className="object-contain" />
           </div>
-        </motion.div>
-
-        {/* Logo */}
-        <motion.div
-          className="mb-6 relative w-[72px] h-[72px] sm:w-[90px] sm:h-[90px] rounded-full overflow-hidden shadow-lg bg-white border-2 border-[#D4A017]/30"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration, delay: stagger * 0.5 }}
-        >
-          <Image src="/assets/images/pelli/logo.jpeg" alt="N & A" fill className="object-cover" />
         </motion.div>
 
         {/* Top decorative line */}
