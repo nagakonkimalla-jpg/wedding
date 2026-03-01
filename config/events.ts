@@ -225,7 +225,7 @@ export const events: Record<string, EventInfo> = {
     venue: "Hindu Temple of Atlanta",
     venueAddress: "5851 GA-85, Riverdale, GA 30274",
     googleMapsUrl: "https://maps.google.com/?q=Hindu+Temple+of+Atlanta",
-    dressCode: "Traditional Indian (Women: Saree / Lehenga 🥻, Men: Kurta / Sherwani 👔) or Formal Western",
+    dressCode: "Traditional Indian (Women: Saree / Lehenga, Men: Kurta / Sherwani) or Formal Western",
     description:
       "The main wedding ceremony — a sacred union of two souls, two families, and a lifetime of love. Join us as we celebrate this once-in-a-lifetime moment.",
     theme: {
