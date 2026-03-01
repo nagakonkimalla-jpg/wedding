@@ -45,4 +45,5 @@ export async function appendRSVP(data: RSVPFormData): Promise<void> {
   if (result.status === "error") {
     throw new Error(`Apps Script error: ${result.message}`);
   }
+
 }

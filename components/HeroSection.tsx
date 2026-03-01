@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { EventInfo } from "@/types";
+import DiscoBall from "./DiscoBall";
 
 interface HeroSectionProps {
   event: EventInfo;
@@ -146,38 +147,74 @@ function HeroDecorations({ eventSlug }: { eventSlug: string }) {
       case "sangeeth":
         return (
           <>
-            {/* Musical notes — silver + gold accent */}
-            <svg className="absolute top-[15%] left-[10%] w-8 h-8 sm:w-12 sm:h-12 opacity-25" viewBox="0 0 40 40" style={{ animation: "hero-float-1 6s ease-in-out infinite" }}>
-              <circle cx="12" cy="30" r="5" fill="#CBD5E1" />
-              <rect x="16" y="8" width="2" height="22" fill="#CBD5E1" />
-              <path d="M18 8 Q28 6 24 16" stroke="#CBD5E1" strokeWidth="2" fill="none" />
-            </svg>
-            <svg className="absolute top-[20%] right-[12%] w-6 h-6 sm:w-10 sm:h-10 opacity-20" viewBox="0 0 40 40" style={{ animation: "hero-float-2 8s ease-in-out infinite" }}>
-              <circle cx="10" cy="30" r="4" fill="#94A3B8" />
-              <rect x="13" y="10" width="2" height="20" fill="#94A3B8" />
-              <circle cx="28" cy="26" r="4" fill="#94A3B8" />
-              <rect x="31" y="6" width="2" height="20" fill="#94A3B8" />
-              <rect x="13" y="6" width="22" height="2" fill="#94A3B8" />
-            </svg>
-            {/* Silver sparkle stars */}
-            <svg className="absolute bottom-[30%] left-[18%] w-6 h-6 sm:w-8 sm:h-8 opacity-30" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 2s ease-in-out infinite" }}>
-              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#D4AF37" />
-            </svg>
-            <svg className="absolute top-[40%] right-[8%] w-5 h-5 sm:w-7 sm:h-7 opacity-25" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 2s ease-in-out infinite 0.7s" }}>
-              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#E2E8F0" />
-            </svg>
-            <svg className="absolute bottom-[38%] right-[22%] w-7 h-7 sm:w-9 sm:h-9 opacity-20" viewBox="0 0 40 40" style={{ animation: "hero-float-3 5s ease-in-out infinite" }}>
-              <circle cx="14" cy="28" r="5" fill="#CBD5E1" />
-              <rect x="18" y="6" width="2" height="22" fill="#CBD5E1" />
-              <path d="M20 6 Q30 4 26 14" stroke="#CBD5E1" strokeWidth="2" fill="none" />
-            </svg>
-            {/* Additional silver/gold sparkles */}
-            <svg className="absolute top-[30%] left-[5%] w-4 h-4 opacity-20" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 3s ease-in-out infinite 1.2s" }}>
-              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#D4AF37" />
-            </svg>
-            <svg className="absolute bottom-[42%] left-[25%] w-3 h-3 opacity-15" viewBox="0 0 24 24" style={{ animation: "hero-sparkle 2.5s ease-in-out infinite 0.3s" }}>
-              <path d="M12 0L14 9L24 12L14 14L12 24L10 14L0 12L10 9Z" fill="#E2E8F0" />
-            </svg>
+            {/* Glitter / Sparkle Field */}
+            {Array.from({ length: 50 }).map((_, i) => {
+              const size = Math.random() * 4 + 1; // 1px to 5px
+              const left = Math.random() * 100;
+              const top = Math.random() * 100;
+              const delay = Math.random() * 6;
+              const duration = Math.random() * 4 + 3; // 3-7s (slower)
+              const isBright = Math.random() > 0.8;
+
+              return (
+                <div
+                  key={`glitter-${i}`}
+                  className="absolute rounded-full"
+                  style={{
+                    left: `${left}%`,
+                    top: `${top}%`,
+                    width: size,
+                    height: size,
+                    backgroundColor: isBright ? "#FFFFFF" : "#CBD5E1",
+                    boxShadow: isBright ? "0 0 6px 2px rgba(255,255,255,0.7)" : "0 0 3px 1px rgba(203,213,225,0.4)",
+                    animation: `hero-sparkle ${duration}s ease-in-out infinite ${delay}s`,
+                    opacity: 0,
+                  }}
+                />
+              );
+            })}
+
+            {/* Ambient glowing orbs (disco light reflections) */}
+            {Array.from({ length: 8 }).map((_, i) => {
+              const size = Math.random() * 20 + 10;
+              const left = Math.random() * 100;
+              const top = Math.random() * 100;
+              const delay = Math.random() * 6;
+              const duration = Math.random() * 5 + 4; // 4-9s (slower)
+              const colors = ["#60A5FA", "#C084FC", "#F472B6", "#E2E8F0"];
+              const color = colors[Math.floor(Math.random() * colors.length)];
+
+              return (
+                <div
+                  key={`orb-${i}`}
+                  className="absolute rounded-full mix-blend-screen"
+                  style={{
+                    left: `${left}%`,
+                    top: `${top}%`,
+                    width: size,
+                    height: size,
+                    backgroundColor: color,
+                    filter: "blur(8px)",
+                    animation: `hero-sparkle ${duration}s ease-in-out infinite ${delay}s`,
+                    opacity: 0,
+                  }}
+                />
+              );
+            })}
+
+            {/* Light Rays / Laser lines */}
+            <div
+              className="absolute top-0 right-[20%] w-[2px] h-[60%] bg-blue-400 transform -rotate-45"
+              style={{ filter: "blur(2px)", animation: "hero-pulse 4s infinite alternate", opacity: 0.2 }}
+            />
+            <div
+              className="absolute top-0 left-[30%] w-[2px] h-[50%] bg-purple-400 transform rotate-45"
+              style={{ filter: "blur(2px)", animation: "hero-pulse 5s infinite alternate 1s", opacity: 0.2 }}
+            />
+            <div
+              className="absolute bottom-0 left-[40%] w-[2px] h-[40%] bg-pink-400 transform rotate-12"
+              style={{ filter: "blur(2px)", animation: "hero-pulse 3s infinite alternate 2s", opacity: 0.15 }}
+            />
           </>
         );
 
@@ -380,25 +417,51 @@ export default function HeroSection({ event }: HeroSectionProps) {
           75% { transform: translateX(8px) translateY(-3px) rotate(1deg); }
         }
         @keyframes hero-sparkle {
-          0%, 100% { opacity: 0.15; transform: scale(1); }
-          50% { opacity: 0.35; transform: scale(1.15); }
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 0.6; transform: scale(1.2); }
+        }
+        @keyframes hero-pulse {
+          from { opacity: 0.1; }
+          to { opacity: 0.4; }
         }
       `}</style>
 
       {/* Background Image with parallax */}
       <div
-        className="absolute inset-0 scale-110"
+        className={`absolute inset-0 ${event.slug === "sangeeth" ? "" : "scale-110"}`}
         style={{ transform: `translateY(${parallaxOffset}px)` }}
       >
-        <Image
-          src={event.heroImage}
-          alt={event.title}
-          fill
-          className="object-cover"
-          style={{ objectPosition: event.slug === "sangeeth" ? "center bottom" : undefined }}
-          priority
-          sizes="100vw"
-        />
+        {event.slug === "sangeeth" ? (
+          <>
+            {/* Blurred background fill so no empty space */}
+            <Image
+              src={event.heroImage}
+              alt=""
+              fill
+              className="object-cover blur-2xl scale-125 opacity-60"
+              sizes="100vw"
+            />
+            {/* Main image — contain to show full photo */}
+            <Image
+              src={event.heroImage}
+              alt={event.title}
+              fill
+              className="object-contain"
+              style={{ objectPosition: "center 20%" }}
+              priority
+              sizes="100vw"
+            />
+          </>
+        ) : (
+          <Image
+            src={event.heroImage}
+            alt={event.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+        )}
       </div>
 
       {/* Gradient fallback - Subtler for watercolor */}
@@ -429,14 +492,21 @@ export default function HeroSection({ event }: HeroSectionProps) {
       {/* Floating themed decorations */}
       <HeroDecorations eventSlug={event.slug} />
 
-      {/* Ornamental top border accent */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-8" style={{ opacity }}>
+      {/* Ornamental top border accent + disco ball hanging from it for sangeeth */}
+      <div className="absolute top-0 left-0 right-0 z-20 flex flex-col items-center pt-8" style={{ opacity }}>
         <svg width="200" height="40" viewBox="0 0 200 40" fill="none" className="text-white/40">
           <path d="M0 20 Q50 0 100 20 Q150 40 200 20" stroke="currentColor" strokeWidth="1" fill="none" />
           <circle cx="100" cy="20" r="4" fill="currentColor" />
           <circle cx="60" cy="12" r="2" fill="currentColor" />
           <circle cx="140" cy="12" r="2" fill="currentColor" />
         </svg>
+        {event.slug === "sangeeth" && (
+          <div className="flex flex-col items-center -mt-2">
+            {/* Wire from arc to ball */}
+            <div className="w-px h-8 sm:h-12 bg-white/30" />
+            <DiscoBall />
+          </div>
+        )}
       </div>
 
       {/* Content with fade on scroll */}
@@ -444,18 +514,20 @@ export default function HeroSection({ event }: HeroSectionProps) {
         className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6"
         style={{ opacity }}
       >
-        {/* Lord Vinayaka — main hero image */}
-        <div
-          className="relative w-[110px] h-[120px] sm:w-[140px] sm:h-[155px] md:w-[170px] md:h-[188px] mb-4 rounded-2xl overflow-hidden"
-          style={{ boxShadow: "0 0 50px rgba(212, 175, 55, 0.35), 0 8px 30px rgba(0,0,0,0.3)" }}
-        >
-          <Image
-            src="/images/ganesha.png"
-            alt="Lord Vinayaka"
-            fill
-            className="object-cover"
-          />
-        </div>
+        {/* Hero icon — Ganesha for non-sangeeth events (sangeeth uses disco ball hanging from arc above) */}
+        {event.slug !== "sangeeth" && (
+          <div
+            className="relative w-[110px] h-[120px] sm:w-[140px] sm:h-[155px] md:w-[170px] md:h-[188px] mb-4 rounded-2xl overflow-hidden"
+            style={{ boxShadow: "0 0 50px rgba(212, 175, 55, 0.35), 0 8px 30px rgba(0,0,0,0.3)" }}
+          >
+            <Image
+              src="/images/ganesha.png"
+              alt="Lord Vinayaka"
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
 
         {/* Ornamental line above subtitle */}
         <div className="flex items-center gap-4 mb-4">

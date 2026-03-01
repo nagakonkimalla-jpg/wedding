@@ -89,23 +89,8 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     var sheet = getEventSheet(data.event);
 
-    // Check for duplicates (by email or phone) within this event sheet
-    var existingData = sheet.getDataRange().getValues();
-    for (var i = 1; i < existingData.length; i++) {
-      var rowPhone = String(existingData[i][2]).trim();
-      var rowEmail = String(existingData[i][3]).trim().toLowerCase();
-
-      if (data.email && rowEmail === data.email.toLowerCase()) {
-        return ContentService.createTextOutput(
-          JSON.stringify({ status: "duplicate", message: "Email already registered for this event" })
-        ).setMimeType(ContentService.MimeType.JSON);
-      }
-      if (data.phone && rowPhone === data.phone) {
-        return ContentService.createTextOutput(
-          JSON.stringify({ status: "duplicate", message: "Phone already registered for this event" })
-        ).setMimeType(ContentService.MimeType.JSON);
-      }
-    }
+    // Duplicate check removed — allow multiple RSVPs per person
+    // (useful for updating attendance, guest count, etc.)
 
     // Append the new RSVP row to the event-specific sheet
     sheet.appendRow([
@@ -121,10 +106,11 @@ function doPost(e) {
       data.rsvpSide || "N/A",
     ]);
 
-    // Send confirmation email if email was provided
-    if (data.email && data.email.trim() !== "") {
-      sendConfirmationEmail(data);
-    }
+    // Email confirmation is handled by the web app (nodemailer), not Apps Script.
+    // If you want Apps Script to also send emails via MailApp, uncomment below:
+    // if (data.email && data.email.trim() !== "") {
+    //   sendConfirmationEmail(data);
+    // }
 
     return ContentService.createTextOutput(
       JSON.stringify({ status: "success", message: "RSVP recorded successfully" })
@@ -137,78 +123,44 @@ function doPost(e) {
   }
 }
 
-function sendConfirmationEmail(data) {
-  var eventName = EVENT_NAMES[data.event] || data.event;
-  var eventDate = EVENT_DATES[data.event] || "";
-  var guestName = data.fullName || "Guest";
-  var willAttend = data.willAttend === "yes";
+// NOTE: The sendConfirmationEmail function below is commented out because
+// the web app handles confirmation emails via nodemailer (lib/sendConfirmationEmail.ts).
+// Uncomment only if you want Apps Script to send emails instead of (or in addition to) the web app.
 
-  var subject = willAttend
-    ? "RSVP Confirmed — " + eventName + " | Neelu & Aditya's Wedding"
-    : "RSVP Received — " + eventName + " | Neelu & Aditya's Wedding";
-
-  var htmlBody = '<!DOCTYPE html>'
-    + '<html><head><meta charset="utf-8"></head>'
-    + '<body style="margin:0;padding:0;background-color:#FFF8F0;font-family:Georgia,serif;">'
-    + '<div style="max-width:600px;margin:0 auto;padding:40px 20px;">'
-
-    // Header with logo
-    + '<div style="text-align:center;padding-bottom:30px;border-bottom:2px solid #C5A028;">'
-    + '<div style="width:80px;height:80px;margin:0 auto 15px auto;border-radius:50%;overflow:hidden;border:2px solid #C5A028;">'
-    + '<img src="https://wedding-five-self-14.vercel.app/images/logo.png" alt="N & A" width="80" height="80" style="display:block;width:80px;height:80px;object-fit:cover;object-position:50% 42%;" />'
-    + '</div>'
-    + '<h1 style="font-size:36px;color:#8B1A1A;margin:0 0 5px 0;font-style:italic;">Neelu & Aditya</h1>'
-    + '<p style="font-size:12px;color:#8B6914;letter-spacing:3px;text-transform:uppercase;margin:0;">Wedding Celebrations</p>'
-    + '</div>'
-
-    // Body
-    + '<div style="padding:30px 0;text-align:center;">'
-    + '<p style="font-size:18px;color:#3D1A1A;margin:0 0 5px 0;">Dear ' + guestName + ',</p>'
-    + '<p style="font-size:15px;color:#5A3A3A;line-height:1.6;margin:15px 0;">'
-    + (willAttend
-        ? 'Thank you for confirming your attendance! We are thrilled that you will be joining us for the <strong>' + eventName + '</strong>.'
-        : 'We received your RSVP for the <strong>' + eventName + '</strong>. We\'re sorry you won\'t be able to make it — you will be missed!')
-    + '</p>'
-
-    // Event details card
-    + '<div style="background-color:#FFFFFF;border:2px solid #C5A02840;border-radius:12px;padding:25px;margin:25px 0;text-align:left;">'
-    + '<h3 style="color:#8B1A1A;margin:0 0 15px 0;font-size:16px;text-transform:uppercase;letter-spacing:2px;">Your RSVP Details</h3>'
-    + '<table style="width:100%;font-size:14px;color:#3D1A1A;border-collapse:collapse;">'
-    + '<tr><td style="padding:6px 0;color:#8B6914;width:140px;">Event</td><td style="padding:6px 0;font-weight:bold;">' + eventName + '</td></tr>'
-    + (eventDate ? '<tr><td style="padding:6px 0;color:#8B6914;">Date & Time</td><td style="padding:6px 0;">' + eventDate + '</td></tr>' : '')
-    + '<tr><td style="padding:6px 0;color:#8B6914;">Attending</td><td style="padding:6px 0;">' + (willAttend ? 'Yes ✓' : 'No') + '</td></tr>'
-    + '<tr><td style="padding:6px 0;color:#8B6914;">Guests</td><td style="padding:6px 0;">' + (data.numberOfGuests || 1) + ' adult(s)' + (data.numberOfKids > 0 ? ', ' + data.numberOfKids + ' kid(s)' : '') + '</td></tr>'
-    + (data.dietaryRestrictions ? '<tr><td style="padding:6px 0;color:#8B6914;">Dietary</td><td style="padding:6px 0;">' + data.dietaryRestrictions + '</td></tr>' : '')
-    + '</table>'
-    + '</div>'
-
-    + (willAttend
-        ? '<p style="font-size:15px;color:#5A3A3A;line-height:1.6;">We look forward to celebrating with you!</p>'
-        : '')
-
-    + '</div>'
-
-    // Decorative divider
-    + '<div style="text-align:center;margin:10px 0 0 0;">'
-    + '<span style="color:#C5A028;font-size:16px;">&#10022; &#10022; &#10022;</span>'
-    + '</div>'
-
-    // Footer
-    + '<div style="text-align:center;padding-top:25px;border-top:1px solid #C5A02830;">'
-    + '<p style="font-size:20px;color:#8B1A1A;font-style:italic;margin:0 0 5px 0;">With love & gratitude,</p>'
-    + '<p style="font-size:14px;color:#8B6914;margin:0;">Neelu & Aditya</p>'
-    + '<p style="font-size:12px;color:#8B6914;margin:10px 0 0 0;"><a href="https://wedding-five-self-14.vercel.app" style="color:#8B6914;text-decoration:underline;">View All Events</a></p>'
-    + '<p style="font-size:11px;color:#999;margin:15px 0 0 0;">This is an automated confirmation. Please do not reply to this email.</p>'
-    + '</div>'
-
-    + '</div></body></html>';
-
-  MailApp.sendEmail({
-    to: data.email,
-    subject: subject,
-    htmlBody: htmlBody,
-  });
-}
+// function sendConfirmationEmail(data) {
+//   var eventName = EVENT_NAMES[data.event] || data.event;
+//   var eventDate = EVENT_DATES[data.event] || "";
+//   var guestName = data.fullName || "Guest";
+//   var willAttend = data.willAttend === "yes";
+//
+//   var subject = willAttend
+//     ? "RSVP Confirmed — " + eventName + " | Neelu & Aditya's Wedding"
+//     : "RSVP Received — " + eventName + " | Neelu & Aditya's Wedding";
+//
+//   var htmlBody = '<!DOCTYPE html>'
+//     + '<html><head><meta charset="utf-8"></head>'
+//     + '<body style="margin:0;padding:0;background-color:#FFF8F0;font-family:Georgia,serif;">'
+//     + '<div style="max-width:600px;margin:0 auto;padding:40px 20px;">'
+//     + '<div style="text-align:center;padding-bottom:30px;border-bottom:2px solid #C5A028;">'
+//     + '<h1 style="font-size:36px;color:#8B1A1A;margin:0 0 5px 0;font-style:italic;">Neelu & Aditya</h1>'
+//     + '<p style="font-size:12px;color:#8B6914;letter-spacing:3px;text-transform:uppercase;margin:0;">Wedding Celebrations</p>'
+//     + '</div>'
+//     + '<div style="padding:30px 0;text-align:center;">'
+//     + '<p style="font-size:18px;color:#3D1A1A;margin:0 0 5px 0;">Dear ' + guestName + ',</p>'
+//     + '<p style="font-size:15px;color:#5A3A3A;line-height:1.6;margin:15px 0;">'
+//     + (willAttend
+//         ? 'Thank you for confirming! We are thrilled you will be joining us for <strong>' + eventName + '</strong>.'
+//         : 'We received your RSVP for <strong>' + eventName + '</strong>. You will be missed!')
+//     + '</p>'
+//     + '</div>'
+//     + '</div></body></html>';
+//
+//   MailApp.sendEmail({
+//     to: data.email,
+//     subject: subject,
+//     htmlBody: htmlBody,
+//   });
+// }
 ```
 
 ---
