@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 
 interface SplashScreenProps {
   onEnter: () => void;
+  isMuted: boolean;
+  onToggleMute: () => void;
 }
 
 interface Sparkle {
@@ -84,62 +86,14 @@ function Twinkle({ size, color }: { size: number; color: string }) {
 }
 
 
-export default function SplashScreen({ onEnter }: SplashScreenProps) {
+export default function SplashScreen({ onEnter, isMuted, onToggleMute }: SplashScreenProps) {
   const [exiting, setExiting] = useState(false);
   const [burstOrigin, setBurstOrigin] = useState({ x: 0, y: 0 });
-  const [isMuted, setIsMuted] = useState(false);
   const prefersReducedMotion = useReducedMotion();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Play traditional music on splash screen
-  useEffect(() => {
-    const audio = new Audio("/audio/traditional.mp3");
-    audio.volume = 0.25;
-    audio.loop = true;
-    audioRef.current = audio;
-
-    // Try to autoplay, fallback to play on first interaction
-    audio.play().catch(() => {
-      const playOnClick = () => {
-        audio.play().catch(() => {});
-        document.removeEventListener("click", playOnClick);
-      };
-      document.addEventListener("click", playOnClick);
-    });
-
-    return () => {
-      audio.pause();
-      audioRef.current = null;
-    };
-  }, []);
-
-  const toggleMute = useCallback(() => {
-    if (!audioRef.current) return;
-    if (isMuted) {
-      audioRef.current.volume = 0.25;
-      audioRef.current.play().catch(() => {});
-    } else {
-      audioRef.current.pause();
-    }
-    setIsMuted(!isMuted);
-  }, [isMuted]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (exiting) return;
-
-      // Fade out splash music
-      if (audioRef.current) {
-        const audio = audioRef.current;
-        const fadeOut = setInterval(() => {
-          if (audio.volume > 0.05) {
-            audio.volume = Math.max(0, audio.volume - 0.05);
-          } else {
-            audio.pause();
-            clearInterval(fadeOut);
-          }
-        }, 50);
-      }
 
       // Haptic feedback on Android
       if (navigator.vibrate) {
@@ -315,7 +269,7 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
 
       {/* Music toggle — bottom left */}
       <motion.button
-        onClick={toggleMute}
+        onClick={onToggleMute}
         className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[#D4A017]/30 bg-white/80 backdrop-blur-sm flex items-center justify-center text-[#B8860B] hover:bg-[#D4A017]/10 transition-colors"
         initial={{ opacity: 0 }}
         animate={exiting ? { opacity: 0 } : { opacity: 1 }}

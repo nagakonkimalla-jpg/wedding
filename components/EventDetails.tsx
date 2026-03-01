@@ -1,4 +1,5 @@
 import { EventInfo } from "@/types";
+import Image from "next/image";
 
 interface EventDetailsProps {
   event: EventInfo;
@@ -40,7 +41,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
     { icon: "\u{1F550}", label: "Time", value: event.time },
     { icon: "\u{1F4CD}", label: "Venue", value: event.venue },
     ...(event.dressCode
-      ? [{ icon: event.dressCode.toLowerCase().includes("glamorous") || event.dressCode.toLowerCase().includes("indo-western") ? "✨" : event.dressCode.toLowerCase().includes("formal") || event.dressCode.toLowerCase().includes("western attire") ? "👔" : event.dressCode.toLowerCase().includes("kurta") && event.dressCode.toLowerCase().includes("saree") ? "👔🥻" : "🥻", label: "Attire", value: event.dressCode }]
+      ? [{ icon: event.dressCode.toLowerCase().includes("glamorous") || event.dressCode.toLowerCase().includes("indo-western") ? "✨" : event.dressCode.toLowerCase().includes("formal") || event.dressCode.toLowerCase().includes("western attire") ? "👔" : event.dressCode.toLowerCase().includes("kurta") && event.dressCode.toLowerCase().includes("saree") ? "kurta-saree" : "🥻", label: "Attire", value: event.dressCode }]
       : []),
   ];
 
@@ -97,6 +98,15 @@ export default function EventDetails({ event }: EventDetailsProps) {
                     <line x1="14" y1="4" x2="14" y2="12" stroke={event.theme.primary} strokeWidth="2" strokeLinecap="round" />
                     <line x1="30" y1="4" x2="30" y2="12" stroke={event.theme.primary} strokeWidth="2" strokeLinecap="round" />
                   </svg>
+                ) : detail.icon === "kurta-saree" ? (
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="relative w-12 h-12 sm:w-14 sm:h-14 drop-shadow-md">
+                      <Image src="/images/shared/kurta_icon.png" alt="Kurta" fill className="object-contain" />
+                    </div>
+                    <div className="relative w-12 h-12 sm:w-14 sm:h-14 drop-shadow-md">
+                      <Image src="/images/shared/saree_icon.png" alt="Saree" fill className="object-contain" />
+                    </div>
+                  </div>
                 ) : detail.icon}
               </div>
               <div
