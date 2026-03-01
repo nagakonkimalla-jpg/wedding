@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 
@@ -88,10 +88,46 @@ export default function SplashScreen({ onEnter }: SplashScreenProps) {
   const [exiting, setExiting] = useState(false);
   const [burstOrigin, setBurstOrigin] = useState({ x: 0, y: 0 });
   const prefersReducedMotion = useReducedMotion();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Play traditional music on splash screen
+  useEffect(() => {
+    const audio = new Audio("/audio/traditional.mp3");
+    audio.volume = 0.3;
+    audio.loop = true;
+    audioRef.current = audio;
+
+    // Try to autoplay, fallback to play on first interaction
+    audio.play().catch(() => {
+      const playOnClick = () => {
+        audio.play().catch(() => {});
+        document.removeEventListener("click", playOnClick);
+      };
+      document.addEventListener("click", playOnClick);
+    });
+
+    return () => {
+      audio.pause();
+      audioRef.current = null;
+    };
+  }, []);
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (exiting) return;
+
+      // Fade out splash music
+      if (audioRef.current) {
+        const audio = audioRef.current;
+        const fadeOut = setInterval(() => {
+          if (audio.volume > 0.05) {
+            audio.volume = Math.max(0, audio.volume - 0.05);
+          } else {
+            audio.pause();
+            clearInterval(fadeOut);
+          }
+        }, 50);
+      }
 
       // Haptic feedback on Android
       if (navigator.vibrate) {
