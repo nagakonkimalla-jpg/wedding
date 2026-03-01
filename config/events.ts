@@ -311,11 +311,12 @@ export const events: Record<string, EventInfo> = {
   },
 };
 
-export const eventOrder = [
-  "haldi",
-  "sangeeth",
-  "pelli",
-];
+const siteMode = process.env.NEXT_PUBLIC_SITE_MODE || "full";
+
+export const eventOrder =
+  siteMode === "friends"
+    ? ["sangeeth", "pelli"]
+    : ["haldi", "sangeeth", "pelli"];
 
 export function getEvent(slug: string): EventInfo | undefined {
   return events[slug];
