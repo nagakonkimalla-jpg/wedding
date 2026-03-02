@@ -396,9 +396,8 @@ export default function SplashScreen({ onEnter, isMuted, onToggleMute }: SplashS
         </motion.div>
 
         {/* CTA Button */}
-        <motion.button
-          onClick={handleClick}
-          className="relative mt-10 px-8 py-3 rounded-full border-2 border-[#D4A017] text-[#B8860B] font-heading text-sm tracking-[0.15em] uppercase cursor-pointer overflow-hidden transition-colors duration-300 hover:bg-[#D4A017] hover:text-white"
+        <motion.div
+          className="relative mt-10"
           initial={{ opacity: 0, y: 20 }}
           animate={
             exiting
@@ -410,11 +409,28 @@ export default function SplashScreen({ onEnter, isMuted, onToggleMute }: SplashS
               ? { duration: 0.25, ease: "easeOut" }
               : { duration, delay: stagger * 4 }
           }
-          whileHover={exiting ? {} : { scale: 1.05 }}
-          whileTap={exiting ? {} : { scale: 0.97 }}
         >
-          Begin the Celebration
-        </motion.button>
+          {/* Pulsing glow ring behind button */}
+          <div className="absolute inset-0 rounded-full animate-[pulse-glow_2s_ease-in-out_infinite] bg-[#D4A017]/20 blur-md scale-110" />
+          <motion.button
+            onClick={handleClick}
+            className="relative px-10 py-4 rounded-full border-2 border-[#D4A017] bg-[#D4A017]/10 text-[#B8860B] font-heading text-base tracking-[0.15em] uppercase cursor-pointer overflow-hidden transition-colors duration-300 hover:bg-[#D4A017] hover:text-white shadow-[0_0_20px_rgba(212,160,23,0.3)]"
+            whileHover={exiting ? {} : { scale: 1.05 }}
+            whileTap={exiting ? {} : { scale: 0.97 }}
+          >
+            Begin the Celebration
+          </motion.button>
+        </motion.div>
+
+        {/* Tap hint */}
+        <motion.p
+          className="text-[#B8860B]/40 text-xs font-body tracking-[0.15em] mt-3"
+          initial={{ opacity: 0 }}
+          animate={exiting ? { opacity: 0 } : { opacity: 1 }}
+          transition={{ duration: 0.6, delay: stagger * 5 }}
+        >
+          Tap to enter
+        </motion.p>
 
         {/* Bottom ornamental line */}
         <motion.div

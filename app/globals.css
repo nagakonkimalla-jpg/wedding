@@ -228,6 +228,11 @@
     animation-delay: 1.5s;
   }
 
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.4; transform: scale(1.05); }
+    50% { opacity: 0.8; transform: scale(1.15); }
+  }
+
   @keyframes gentle-swing {
     0% {
       transform: rotate(-3deg);
