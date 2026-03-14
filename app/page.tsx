@@ -4,6 +4,7 @@ import AnimatedHero from "@/components/AnimatedHero";
 import AnimatedEventCard from "@/components/AnimatedEventCard";
 import AnimatedSections from "@/components/AnimatedSections";
 import AnimatedFooterClient from "@/components/AnimatedFooterClient";
+import HomepageRSVP from "@/components/HomepageRSVP";
 
 const gradientMap: Record<string, string> = {
   haldi: "from-yellow-300 via-amber-400 to-yellow-500",
@@ -11,11 +12,8 @@ const gradientMap: Record<string, string> = {
   mehendi: "from-emerald-300 via-green-400 to-emerald-500",
   sangeeth: "from-purple-600 via-violet-700 to-indigo-800",
   pellikuthuru: "from-red-500 via-rose-600 to-red-700",
-  pellikoduku: "from-amber-300 via-yellow-200 to-amber-400",
-  "aditya-upanayanam": "from-orange-200 via-amber-300 to-orange-400",
   pelli: "from-yellow-100 via-amber-200 to-yellow-300",
-  "satyanarayana-swami-vratam-aditya": "from-orange-300 via-amber-400 to-orange-500",
-  "satyanarayana-swami-vratam-neelu": "from-orange-200 via-amber-300 to-orange-400",
+  "satyanarayana-swami-vratam": "from-orange-300 via-amber-400 to-orange-500",
 };
 
 const textColorMap: Record<string, string> = {
@@ -63,6 +61,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* RSVP Section */}
+        <HomepageRSVP />
 
         {/* Footer */}
         <AnimatedFooterClient />

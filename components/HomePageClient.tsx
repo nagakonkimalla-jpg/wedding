@@ -17,6 +17,7 @@ export default function HomePageClient({
   const [revealContent, setRevealContent] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isMutedRef = useRef(false);
 
   // Initialize audio once — persists across splash and homepage
   useEffect(() => {
@@ -26,8 +27,13 @@ export default function HomePageClient({
     audioRef.current = audio;
 
     audio.play().catch(() => {
-      const playOnClick = () => {
-        if (audioRef.current && !isMuted) {
+      const playOnClick = (e: Event) => {
+        // Don't auto-play if user has muted
+        if (isMutedRef.current) return;
+        // Don't interfere with mute button clicks
+        const target = e.target as HTMLElement;
+        if (target.closest('[data-mute-btn]')) return;
+        if (audioRef.current) {
           audioRef.current.play().catch(() => {});
         }
         document.removeEventListener("click", playOnClick);
@@ -41,19 +47,20 @@ export default function HomePageClient({
       audio.pause();
       audioRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleMute = useCallback(() => {
     if (!audioRef.current) return;
-    if (isMuted) {
+    const newMuted = !isMutedRef.current;
+    isMutedRef.current = newMuted;
+    if (newMuted) {
+      audioRef.current.pause();
+    } else {
       audioRef.current.volume = 0.25;
       audioRef.current.play().catch(() => {});
-    } else {
-      audioRef.current.pause();
     }
-    setIsMuted((m) => !m);
-  }, [isMuted]);
+    setIsMuted(newMuted);
+  }, []);
 
   useEffect(() => {
     const seen = sessionStorage.getItem(SESSION_KEY);
@@ -89,6 +96,7 @@ export default function HomePageClient({
       {/* Music toggle on homepage (shown after splash) */}
       {!showSplash && (
         <button
+          data-mute-btn
           onClick={toggleMute}
           className="fixed bottom-6 left-6 z-50 p-4 bg-white/10 backdrop-blur-md rounded-full shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/20 transition-all duration-300 hover:scale-110"
           aria-label={isMuted ? "Play music" : "Mute music"}

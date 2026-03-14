@@ -154,74 +154,13 @@ export const events: Record<string, EventInfo> = {
     ],
     decorativeEmoji: "👰",
   },
-  pellikoduku: {
-    slug: "pellikoduku",
-    title: "Pellikoduku",
-    subtitle: "పెళ్ళికొడుకు",
-    tagline: "Honoring the groom's celebration",
-    date: "2026-04-22",
-    time: "9:00 AM - 12:00 PM",
-    venue: "Groom's Family Residence",
-    venueAddress: "6390 Bennett Rd, Cumming, GA 30041",
-    googleMapsUrl: "https://maps.google.com/?q=6390+Bennett+Rd+Cumming+GA+30041",
-    dressCode: "Traditional Cream & Gold Kurta / Sherwani",
-    description:
-      "A joyous Telugu tradition celebrating the groom as he embarks on a new chapter, blessed by family and friends with love and festive spirit.",
-    theme: {
-      primary: "#D4A017",
-      secondary: "#F5E6CC",
-      accent: "#8B6914",
-      bg: "#FFFDF7",
-      cardBg: "#FFFFFF",
-      text: "#44340A",
-      gradient: "from-amber-300 via-yellow-200 to-amber-400",
-    },
-    heroImage: "/images/shared/DSC05223-2.jpg",
-    galleryImages: [
-      "/images/shared/DSC05984.jpg",
-      "/images/shared/DSC05872.jpg",
-      "/images/shared/DSC06256.jpg",
-    ],
-    decorativeEmoji: "🤵",
-  },
-  "aditya-upanayanam": {
-    slug: "aditya-upanayanam",
-    title: "Aditya's Upanayanam",
-    subtitle: "ఉపనయనం",
-    tagline: "Sacred thread ceremony",
-    date: "2026-04-22",
-    time: "7:00 AM - 12:00 PM",
-    venue: "Hanuman Mandir",
-    venueAddress: "390 Cumming St B, Alpharetta, GA 30004",
-    googleMapsUrl:
-      "https://maps.google.com/?q=390+Cumming+St+B+Alpharetta+GA+30004",
-    dressCode: "Traditional White / Beige",
-    description:
-      "The sacred Upanayanam ceremony marks a spiritual milestone — the initiation into Vedic learning and the beginning of a disciplined, purposeful life.",
-    theme: {
-      primary: "#B45309",
-      secondary: "#FDE68A",
-      accent: "#78350F",
-      bg: "#FFF8F0",
-      cardBg: "#FFFFFF",
-      text: "#78350F",
-      gradient: "from-orange-200 via-amber-300 to-orange-400",
-    },
-    heroImage: "/images/shared/DSC05897.jpg",
-    galleryImages: [
-      "/images/shared/DSC06256.jpg",
-      "/images/shared/DSC05386.jpg",
-      "/images/shared/DSC05984.jpg",
-    ],
-    decorativeEmoji: "🙏",
-  },
   pelli: {
     slug: "pelli",
     title: "Vivaham — The Wedding",
     subtitle: "వివాహం",
     tagline: "Two souls, one beautiful journey",
     date: "2026-04-23",
-    time: "6:30 AM - 12:30 PM (Lunch Follows)",
+    time: "6:30 AM - 12:30 PM (Muhurtham: 9:23 AM) - Lunch Follows",
     venue: "Hindu Temple of Atlanta",
     venueAddress: "5851 GA-85, Riverdale, GA 30274",
     googleMapsUrl: "https://maps.google.com/?q=Hindu+Temple+of+Atlanta",
@@ -239,6 +178,13 @@ export const events: Record<string, EventInfo> = {
     },
     heroImage: "/images/pelli/DSC05926-2.jpg",
     galleryImages: [
+      "/images/pelli/temple-lift.jpg",
+      "/images/pelli/temple-steps.jpg",
+      "/images/pelli/temple-archway.jpg",
+      "/images/pelli/temple-dance.jpg",
+      "/images/pelli/temple-closeup.jpg",
+      "/images/pelli/temple-embrace.jpg",
+      "/images/pelli/temple-walk.jpg",
       "/images/pelli/DSC05223-2.jpg",
       "/images/pelli/DSC05386.jpg",
       "/images/pelli/DSC05476-2-Edit.jpg",
@@ -249,16 +195,16 @@ export const events: Record<string, EventInfo> = {
     decorativeEmoji: "✨",
     venueImage: "/images/temple.jpg",
   },
-  "satyanarayana-swami-vratam-aditya": {
-    slug: "satyanarayana-swami-vratam-aditya",
+  "satyanarayana-swami-vratam": {
+    slug: "satyanarayana-swami-vratam",
     title: "Satyanarayana Swami Vratam",
     subtitle: "సత్యనారాయణ స్వామి వ్రతం",
-    tagline: "A sacred puja for divine blessings — Groom's side",
+    tagline: "A sacred puja for divine blessings",
     date: "2026-04-25",
     time: "9:00 AM - 1:00 PM",
-    venue: "Groom's Family Residence",
-    venueAddress: "6390 Bennett Rd, Cumming, GA 30041",
-    googleMapsUrl: "https://maps.google.com/?q=6390+Bennett+Rd+Cumming+GA+30041",
+    venue: "Sri Maha Lakshmi Temple of Atlanta",
+    venueAddress: "Sri Maha Lakshmi Temple, Atlanta, GA",
+    googleMapsUrl: "https://maps.google.com/?q=Sri+Maha+Lakshmi+Temple+of+Atlanta",
     dressCode: "Traditional Indian Attire",
     description:
       "A traditional Hindu puja performed to seek the blessings of Lord Satyanarayana for peace, prosperity, and happiness in the couple's married life.",
@@ -279,36 +225,6 @@ export const events: Record<string, EventInfo> = {
     ],
     decorativeEmoji: "🙏",
   },
-  "satyanarayana-swami-vratam-neelu": {
-    slug: "satyanarayana-swami-vratam-neelu",
-    title: "Satyanarayana Swami Vratam",
-    subtitle: "సత్యనారాయణ స్వామి వ్రతం",
-    tagline: "A sacred puja for divine blessings — Bride's side",
-    date: "2026-04-26",
-    time: "9:00 AM - 1:00 PM",
-    venue: "Bride's Family Residence",
-    venueAddress: "435 Fairview Cir, Roswell, GA 30076",
-    googleMapsUrl: "https://maps.google.com/?q=435+Fairview+Cir+Roswell+GA+30076",
-    dressCode: "Traditional Indian Attire",
-    description:
-      "A traditional Hindu puja performed to seek the blessings of Lord Satyanarayana for peace, prosperity, and happiness in the couple's married life.",
-    theme: {
-      primary: "#EA580C",
-      secondary: "#FFEDD5",
-      accent: "#C2410C",
-      bg: "#FFF7ED",
-      cardBg: "#FFFFFF",
-      text: "#7C2D12",
-      gradient: "from-orange-300 via-amber-400 to-orange-500",
-    },
-    heroImage: "/images/shared/DSC05984.jpg",
-    galleryImages: [
-      "/images/shared/DSC06256.jpg",
-      "/images/shared/DSC05926-2.jpg",
-      "/images/shared/Neelu-Aditya_AR50419.jpg",
-    ],
-    decorativeEmoji: "🙏",
-  },
 };
 
 const siteMode = process.env.NEXT_PUBLIC_SITE_MODE || "full";
@@ -316,7 +232,16 @@ const siteMode = process.env.NEXT_PUBLIC_SITE_MODE || "full";
 export const eventOrder =
   siteMode === "friends"
     ? ["sangeeth", "pelli"]
-    : ["haldi", "sangeeth", "pelli"];
+    : siteMode === "wedding"
+    ? ["pelli"]
+    : [
+        "haldi",
+        "mehendi",
+        "sangeeth",
+        "pellikuthuru",
+        "pelli",
+        "satyanarayana-swami-vratam",
+      ];
 
 export function getEvent(slug: string): EventInfo | undefined {
   return events[slug];
