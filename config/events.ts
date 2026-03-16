@@ -134,7 +134,7 @@ export const events: Record<string, EventInfo> = {
     venue: "Bride's Family Residence",
     venueAddress: "435 Fairview Cir, Roswell, GA 30076",
     googleMapsUrl: "https://maps.google.com/?q=435+Fairview+Cir+Roswell+GA+30076",
-    dressCode: "Traditional Red & Gold Saree / Lehenga",
+    dressCode: "Traditional Attire: Saree / Lehenga",
     description:
       "A beautiful Telugu tradition celebrating the bride as she prepares for her wedding day, surrounded by love, laughter, and blessings from family and friends.",
     theme: {
