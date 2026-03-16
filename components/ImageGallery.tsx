@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { EventTheme } from "@/types";
 
@@ -196,16 +197,18 @@ export default function ImageGallery({ images, theme, eventSlug }: ImageGalleryP
         </div>
       </section>
 
-      {/* Lightbox */}
-      {lightboxIndex !== null && (
-        <LightboxModal
-          images={realImages}
-          currentIndex={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
-          onPrev={goPrev}
-          onNext={goNext}
-        />
-      )}
+      {/* Lightbox — portal to body to escape AnimatedSection stacking context */}
+      {lightboxIndex !== null &&
+        createPortal(
+          <LightboxModal
+            images={realImages}
+            currentIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+            onPrev={goPrev}
+            onNext={goNext}
+          />,
+          document.body
+        )}
     </>
   );
 }

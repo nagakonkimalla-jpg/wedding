@@ -130,7 +130,7 @@ export const events: Record<string, EventInfo> = {
     subtitle: "పెళ్ళికూతురు",
     tagline: "Celebrating the bride's journey",
     date: "2026-04-22",
-    time: "9:00 AM - 12:00 PM",
+    time: "8:00 AM - 12:00 PM",
     venue: "Bride's Family Residence",
     venueAddress: "435 Fairview Cir, Roswell, GA 30076",
     googleMapsUrl: "https://maps.google.com/?q=435+Fairview+Cir+Roswell+GA+30076",
@@ -153,6 +153,36 @@ export const events: Record<string, EventInfo> = {
       "/images/shared/DSC05872.jpg",
     ],
     decorativeEmoji: "👰",
+  },
+  pellikoduku: {
+    slug: "pellikoduku",
+    title: "Pellikoduku",
+    subtitle: "పెళ్ళికొడుకు",
+    tagline: "Celebrating the groom's journey",
+    date: "2026-04-22",
+    time: "8:00 AM - 12:00 PM",
+    venue: "Groom's Family Residence",
+    venueAddress: "Groom's Family Residence, Atlanta, GA",
+    googleMapsUrl: "https://maps.google.com/?q=Atlanta+GA",
+    dressCode: "Traditional Indian Attire",
+    description:
+      "A joyous Telugu tradition celebrating the groom as he prepares for his wedding day, surrounded by love, blessings, and the warmth of family.",
+    theme: {
+      primary: "#1E40AF",
+      secondary: "#93C5FD",
+      accent: "#D4A017",
+      bg: "#EFF6FF",
+      cardBg: "#FFFFFF",
+      text: "#1E3A5F",
+      gradient: "from-blue-500 via-indigo-600 to-blue-700",
+    },
+    heroImage: "/images/shared/DSC05872.jpg",
+    galleryImages: [
+      "/images/shared/DSC05984.jpg",
+      "/images/shared/DSC06256.jpg",
+      "/images/shared/DSC05897.jpg",
+    ],
+    decorativeEmoji: "🤵",
   },
   pelli: {
     slug: "pelli",
@@ -234,14 +264,9 @@ export const eventOrder =
     ? ["sangeeth", "pelli"]
     : siteMode === "wedding"
     ? ["pelli"]
-    : [
-        "haldi",
-        "mehendi",
-        "sangeeth",
-        "pellikuthuru",
-        "pelli",
-        "satyanarayana-swami-vratam",
-      ];
+    : siteMode === "groom"
+    ? ["haldi", "sangeeth", "pellikoduku", "pelli"]
+    : ["haldi", "sangeeth", "pellikuthuru", "pelli"];
 
 export function getEvent(slug: string): EventInfo | undefined {
   return events[slug];
