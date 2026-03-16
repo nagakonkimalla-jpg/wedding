@@ -18,11 +18,14 @@ export default function HomepageRSVP() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [numberOfGuests, setNumberOfGuests] = useState(1);
-  const [numberOfKids, setNumberOfKids] = useState(0);
   const [dietaryRestrictions, setDietaryRestrictions] = useState("");
   const [message, setMessage] = useState("");
-  const [selectedEvents, setSelectedEvents] = useState<Set<string>>(new Set());
+  const [eventAttendance, setEventAttendance] = useState<Record<string, "yes" | "no" | "maybe">>(
+    eventOrder.length === 1 ? { [eventOrder[0]]: "yes" } : {}
+  );
+  const [eventGuests, setEventGuests] = useState<Record<string, { adults: number; kids: number }>>(
+    eventOrder.length === 1 ? { [eventOrder[0]]: { adults: 1, kids: 0 } } : {}
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -38,8 +41,6 @@ export default function HomepageRSVP() {
         if (parsed.fullName) setFullName(parsed.fullName);
         if (parsed.email) setEmail(parsed.email);
         if (parsed.phone) setPhone(parsed.phone);
-        if (parsed.numberOfGuests) setNumberOfGuests(parsed.numberOfGuests);
-        if (parsed.numberOfKids != null) setNumberOfKids(parsed.numberOfKids);
         if (parsed.dietaryRestrictions) setDietaryRestrictions(parsed.dietaryRestrictions);
       }
       const rsvpEvents = JSON.parse(localStorage.getItem("wedding-rsvp-events") || "{}");
@@ -49,16 +50,26 @@ export default function HomepageRSVP() {
     } catch {}
   }, []);
 
-  const toggleEvent = (slug: string) => {
-    setSelectedEvents((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) {
-        next.delete(slug);
-      } else {
-        next.add(slug);
+  const setAttendance = (slug: string, status: "yes" | "no" | "maybe") => {
+    setEventAttendance((prev) => ({ ...prev, [slug]: status }));
+    if (status === "yes" || status === "maybe") {
+      if (!eventGuests[slug]) {
+        setEventGuests((g) => ({ ...g, [slug]: { adults: 1, kids: 0 } }));
       }
-      return next;
-    });
+    } else {
+      setEventGuests((g) => {
+        const copy = { ...g };
+        delete copy[slug];
+        return copy;
+      });
+    }
+  };
+
+  const updateEventGuests = (slug: string, field: "adults" | "kids", value: number) => {
+    setEventGuests((g) => ({
+      ...g,
+      [slug]: { ...g[slug], [field]: value },
+    }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -70,14 +81,22 @@ export default function HomepageRSVP() {
       return;
     }
 
-    if (selectedEvents.size === 0) {
-      setError("Please select at least one event you'd like to attend.");
+    const respondedSlugs = Object.keys(eventAttendance);
+    if (respondedSlugs.length === 0) {
+      setError("Please respond to at least one event.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
+      const eventDetails = respondedSlugs.map((slug) => ({
+        slug,
+        willAttend: eventAttendance[slug],
+        adults: eventGuests[slug]?.adults || 1,
+        kids: eventGuests[slug]?.kids || 0,
+      }));
+
       const res = await fetch("/api/rsvp-batch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -85,11 +104,13 @@ export default function HomepageRSVP() {
           fullName: fullName.trim(),
           phone,
           email,
-          numberOfGuests: numberOfGuests || 1,
-          numberOfKids: numberOfKids || 0,
           dietaryRestrictions,
           message,
-          eventSlugs: Array.from(selectedEvents),
+          eventDetails,
+          // backwards compat
+          eventSlugs: respondedSlugs,
+          numberOfGuests: eventDetails[0]?.adults || 1,
+          numberOfKids: eventDetails[0]?.kids || 0,
         }),
       });
 
@@ -103,17 +124,18 @@ export default function HomepageRSVP() {
         try {
           localStorage.setItem(
             "wedding-rsvp-details",
-            JSON.stringify({ fullName, phone, email, numberOfGuests, numberOfKids, dietaryRestrictions })
+            JSON.stringify({ fullName, phone, email, dietaryRestrictions })
           );
           const rsvpEvents = JSON.parse(localStorage.getItem("wedding-rsvp-events") || "{}");
-          selectedEvents.forEach((slug) => {
-            rsvpEvents[slug] = { email, willAttend: "yes" };
+          respondedSlugs.forEach((slug) => {
+            rsvpEvents[slug] = { email, willAttend: eventAttendance[slug] };
           });
           localStorage.setItem("wedding-rsvp-events", JSON.stringify(rsvpEvents));
           setAlreadySubmitted(true);
         } catch {}
 
-        setSelectedEvents(new Set());
+        setEventAttendance({});
+        setEventGuests({});
         setMessage("");
       } else {
         setError(data.message || "Something went wrong. Please try again.");
@@ -199,35 +221,6 @@ export default function HomepageRSVP() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-body text-sm font-semibold mb-1 text-[#3D2B1F]">
-                    Number of Adults
-                  </label>
-                  <input
-                    type="number"
-                    value={isNaN(numberOfGuests) ? "" : numberOfGuests}
-                    onChange={(e) => setNumberOfGuests(parseInt(e.target.value))}
-                    min={1}
-                    max={10}
-                    className={inputClasses}
-                  />
-                </div>
-                <div>
-                  <label className="block font-body text-sm font-semibold mb-1 text-[#3D2B1F]">
-                    Number of Kids
-                  </label>
-                  <input
-                    type="number"
-                    value={isNaN(numberOfKids) ? "" : numberOfKids}
-                    onChange={(e) => setNumberOfKids(parseInt(e.target.value))}
-                    min={0}
-                    max={10}
-                    className={inputClasses}
-                  />
-                </div>
-              </div>
-
               <div>
                 <label className="block font-body text-sm font-semibold mb-1 text-[#3D2B1F]">
                   Dietary Restrictions
@@ -254,65 +247,164 @@ export default function HomepageRSVP() {
                 />
               </div>
 
-              {/* Divider */}
-              <div className="flex items-center gap-4 py-2">
-                <div className="flex-1 h-px bg-[#B8860B]/20" />
-                <span className="font-body text-sm font-semibold text-[#3D2B1F]/70">
-                  Which events will you attend?
-                </span>
-                <div className="flex-1 h-px bg-[#B8860B]/20" />
-              </div>
+              {/* Event selection */}
+              {eventOrder.length > 1 ? (
+                <>
+                  {/* Divider */}
+                  <div className="flex items-center gap-4 py-2">
+                    <div className="flex-1 h-px bg-[#B8860B]/20" />
+                    <span className="font-body text-sm font-semibold text-[#3D2B1F]/70">
+                      Will you attend?
+                    </span>
+                    <div className="flex-1 h-px bg-[#B8860B]/20" />
+                  </div>
 
-              {/* Event Checkboxes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {eventOrder.map((slug) => {
-                  const event = events[slug];
-                  if (!event) return null;
-                  const isChecked = selectedEvents.has(slug);
+                  {/* Event Cards with Yes/No/Maybe + guest counts */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {eventOrder.map((slug) => {
+                      const event = events[slug];
+                      if (!event) return null;
+                      const status = eventAttendance[slug];
+                      const guests = eventGuests[slug] || { adults: 1, kids: 0 };
+                      const showGuests = status === "yes" || status === "maybe";
 
-                  return (
-                    <label
-                      key={slug}
-                      className={`flex items-center gap-2.5 cursor-pointer rounded-lg border px-3 py-2.5 transition-all duration-200 ${
-                        isChecked
-                          ? "border-[#B8860B] bg-[#B8860B]/5"
-                          : "border-gray-200 bg-white hover:border-[#B8860B]/40"
-                      }`}
-                    >
-                      <div
-                        className={`w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all ${
-                          isChecked
-                            ? "bg-[#B8860B] border-[#B8860B]"
-                            : "border-gray-300 bg-white"
+                      return (
+                        <div
+                          key={slug}
+                          className={`rounded-lg border transition-all duration-200 ${
+                            status === "yes"
+                              ? "border-green-500 bg-green-50"
+                              : status === "maybe"
+                              ? "border-amber-400 bg-amber-50"
+                              : status === "no"
+                              ? "border-red-300 bg-red-50/50"
+                              : "border-gray-200 bg-white"
+                          }`}
+                        >
+                          <div className="px-3 py-2.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-sm">{event.decorativeEmoji}</span>
+                              <span className="font-heading font-bold text-[#3D2B1F] text-sm truncate">
+                                {event.title}
+                              </span>
+                            </div>
+                            <p className="text-[10px] font-body text-[#3D2B1F]/50 mt-0.5 truncate">
+                              {formatDate(event.date)} &middot; {event.venue}
+                            </p>
+                            <div className="flex gap-1.5 mt-2">
+                              {(["yes", "no", "maybe"] as const).map((opt) => (
+                                <button
+                                  key={opt}
+                                  type="button"
+                                  onClick={() => setAttendance(slug, opt)}
+                                  className={`flex-1 py-1 text-[11px] font-body font-semibold rounded-md border transition-all ${
+                                    status === opt
+                                      ? opt === "yes"
+                                        ? "bg-green-600 text-white border-green-600"
+                                        : opt === "maybe"
+                                        ? "bg-amber-500 text-white border-amber-500"
+                                        : "bg-red-500 text-white border-red-500"
+                                      : "bg-white text-[#3D2B1F]/60 border-gray-200 hover:border-[#B8860B]/40"
+                                  }`}
+                                >
+                                  {opt === "yes" ? "Yes" : opt === "no" ? "No" : "Maybe"}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          {showGuests && (
+                            <div className="flex items-center gap-3 px-3 pb-2.5 pt-0.5">
+                              <div className="flex items-center gap-1.5">
+                                <label className="font-body text-[10px] text-[#3D2B1F]/60">Adults</label>
+                                <input
+                                  type="number"
+                                  value={isNaN(guests.adults) ? "" : guests.adults}
+                                  onChange={(e) => updateEventGuests(slug, "adults", parseInt(e.target.value))}
+                                  min={1}
+                                  max={20}
+                                  className="w-14 px-2 py-1 text-xs rounded border border-[#B8860B]/30 font-body text-gray-800 bg-white focus:outline-none focus:ring-1 focus:ring-[#B8860B]/40"
+                                />
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <label className="font-body text-[10px] text-[#3D2B1F]/60">Kids</label>
+                                <input
+                                  type="number"
+                                  value={isNaN(guests.kids) ? "" : guests.kids}
+                                  onChange={(e) => updateEventGuests(slug, "kids", parseInt(e.target.value))}
+                                  min={0}
+                                  max={20}
+                                  className="w-14 px-2 py-1 text-xs rounded border border-[#B8860B]/30 font-body text-gray-800 bg-white focus:outline-none focus:ring-1 focus:ring-[#B8860B]/40"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                /* Single event - show will attend + guest count fields */
+                <>
+                  <div className="flex items-center gap-4 py-2">
+                    <div className="flex-1 h-px bg-[#B8860B]/20" />
+                    <span className="font-body text-sm font-semibold text-[#3D2B1F]/70">
+                      Will you attend?
+                    </span>
+                    <div className="flex-1 h-px bg-[#B8860B]/20" />
+                  </div>
+                  <div className="flex gap-3">
+                    {(["yes", "no", "maybe"] as const).map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => setAttendance(eventOrder[0], opt)}
+                        className={`flex-1 py-2.5 font-body font-semibold rounded-xl border transition-all text-sm ${
+                          eventAttendance[eventOrder[0]] === opt
+                            ? opt === "yes"
+                              ? "bg-green-600 text-white border-green-600"
+                              : opt === "maybe"
+                              ? "bg-amber-500 text-white border-amber-500"
+                              : "bg-red-500 text-white border-red-500"
+                            : "bg-white text-[#3D2B1F]/60 border-gray-200 hover:border-[#B8860B]/40"
                         }`}
                       >
-                        {isChecked && (
-                          <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
+                        {opt === "yes" ? "Yes" : opt === "no" ? "No" : "Maybe"}
+                      </button>
+                    ))}
+                  </div>
+                  {(eventAttendance[eventOrder[0]] === "yes" || eventAttendance[eventOrder[0]] === "maybe") && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-body text-sm font-semibold mb-1 text-[#3D2B1F]">
+                          Number of Adults
+                        </label>
+                        <input
+                          type="number"
+                          value={isNaN(eventGuests[eventOrder[0]]?.adults) ? "" : eventGuests[eventOrder[0]]?.adults}
+                          onChange={(e) => updateEventGuests(eventOrder[0], "adults", parseInt(e.target.value))}
+                          min={1}
+                          max={20}
+                          className={inputClasses}
+                        />
                       </div>
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleEvent(slug)}
-                        className="sr-only"
-                      />
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-sm">{event.decorativeEmoji}</span>
-                          <span className="font-heading font-bold text-[#3D2B1F] text-sm truncate">
-                            {event.title}
-                          </span>
-                        </div>
-                        <p className="text-[10px] font-body text-[#3D2B1F]/50 mt-0.5 truncate">
-                          {formatDate(event.date)} &middot; {event.venue}
-                        </p>
+                      <div>
+                        <label className="block font-body text-sm font-semibold mb-1 text-[#3D2B1F]">
+                          Number of Kids
+                        </label>
+                        <input
+                          type="number"
+                          value={isNaN(eventGuests[eventOrder[0]]?.kids) ? "" : eventGuests[eventOrder[0]]?.kids}
+                          onChange={(e) => updateEventGuests(eventOrder[0], "kids", parseInt(e.target.value))}
+                          min={0}
+                          max={20}
+                          className={inputClasses}
+                        />
                       </div>
-                    </label>
-                  );
-                })}
-              </div>
+                    </div>
+                  )}
+                </>
+              )}
 
               {/* Error */}
               {error && (

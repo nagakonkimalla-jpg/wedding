@@ -15,7 +15,7 @@ export default function AnimatedSections() {
   const initial = mounted ? { opacity: 0, y: prefersReducedMotion ? 0 : 30 } : false;
 
   return (
-    <div className="text-center mb-16">
+    <div className="text-center mb-8 sm:mb-16">
       <motion.h3
         className="font-heading text-3xl sm:text-4xl text-[#3D2B1F] mb-2"
         initial={initial}

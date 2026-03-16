@@ -35,7 +35,7 @@ export interface RSVPFormData {
   email: string;
   numberOfGuests: number;
   numberOfKids: number;
-  willAttend: "yes" | "no";
+  willAttend: "yes" | "no" | "maybe";
   dietaryRestrictions: string;
   message: string;
   rsvpSide?: "pellikuthuru" | "pellikoduku";

@@ -4,15 +4,23 @@ import { getEvent } from "@/config/events";
 import { sendBatchConfirmationEmail } from "@/lib/sendBatchConfirmationEmail";
 import { RSVPFormData } from "@/types";
 
+interface EventDetail {
+  slug: string;
+  adults: number;
+  kids: number;
+  willAttend?: "yes" | "no" | "maybe";
+}
+
 interface BatchRSVPBody {
   fullName: string;
   phone: string;
   email: string;
-  numberOfGuests: number;
-  numberOfKids: number;
+  numberOfGuests?: number;
+  numberOfKids?: number;
   dietaryRestrictions: string;
   message: string;
-  eventSlugs: string[];
+  eventSlugs?: string[];
+  eventDetails?: EventDetail[];
 }
 
 export async function POST(request: NextRequest) {
@@ -26,7 +34,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!body.eventSlugs || body.eventSlugs.length === 0) {
+    // Build event list from eventDetails (new) or eventSlugs (legacy)
+    const eventList: EventDetail[] = body.eventDetails && body.eventDetails.length > 0
+      ? body.eventDetails
+      : (body.eventSlugs || []).map((slug) => ({
+          slug,
+          adults: body.numberOfGuests || 1,
+          kids: body.numberOfKids || 0,
+        }));
+
+    if (eventList.length === 0) {
       return NextResponse.json(
         { success: false, message: "Please select at least one event." },
         { status: 400 }
@@ -37,52 +54,62 @@ export async function POST(request: NextRequest) {
     const results: { slug: string; success: boolean; error?: string }[] = [];
 
     // Submit RSVP for each selected event to Google Sheets
-    for (const slug of body.eventSlugs) {
+    for (const detail of eventList) {
       const rsvpData: RSVPFormData = {
         fullName: body.fullName.trim(),
         phone: body.phone || "",
         email: body.email || "",
-        numberOfGuests: Math.max(0, Math.round(body.numberOfGuests || 1)),
-        numberOfKids: Math.max(0, Math.round(body.numberOfKids || 0)),
-        willAttend: "yes",
+        numberOfGuests: Math.max(1, Math.round(detail.adults || 1)),
+        numberOfKids: Math.max(0, Math.round(detail.kids || 0)),
+        willAttend: detail.willAttend || "yes",
         dietaryRestrictions: body.dietaryRestrictions || "",
         message: body.message || "",
-        eventSlug: slug,
+        eventSlug: detail.slug,
         timestamp,
       };
 
       try {
         await appendRSVP(rsvpData);
-        results.push({ slug, success: true });
+        results.push({ slug: detail.slug, success: true });
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        console.error(`RSVP failed for ${slug}:`, msg);
-        results.push({ slug, success: false, error: msg });
+        console.error(`RSVP failed for ${detail.slug}:`, msg);
+        results.push({ slug: detail.slug, success: false, error: msg });
       }
     }
 
     const allSucceeded = results.every((r) => r.success);
     const succeededSlugs = results.filter((r) => r.success).map((r) => r.slug);
 
-    // Send ONE consolidated confirmation email
+    // Send ONE consolidated confirmation email with all responded events
     if (body.email && succeededSlugs.length > 0) {
-      const events = succeededSlugs
-        .map((slug) => getEvent(slug))
-        .filter(Boolean);
+      const succeededDetails = eventList.filter((d) => succeededSlugs.includes(d.slug));
+      const succeededEvents = succeededDetails
+        .map((d) => getEvent(d.slug))
+        .filter(Boolean) as import("@/types").EventInfo[];
 
-      if (events.length > 0) {
-        sendBatchConfirmationEmail(
-          {
-            fullName: body.fullName.trim(),
-            email: body.email,
-            numberOfGuests: body.numberOfGuests || 1,
-            numberOfKids: body.numberOfKids || 0,
-            dietaryRestrictions: body.dietaryRestrictions || "",
-          },
-          events as import("@/types").EventInfo[]
-        ).catch((err) => {
+      const guestCountMap: Record<string, { adults: number; kids: number }> = {};
+      const attendanceMap: Record<string, string> = {};
+      for (const detail of succeededDetails) {
+        guestCountMap[detail.slug] = { adults: detail.adults || 1, kids: detail.kids || 0 };
+        attendanceMap[detail.slug] = detail.willAttend || "yes";
+      }
+
+      if (succeededEvents.length > 0) {
+        try {
+          await sendBatchConfirmationEmail(
+            {
+              fullName: body.fullName.trim(),
+              email: body.email,
+              dietaryRestrictions: body.dietaryRestrictions || "",
+            },
+            succeededEvents,
+            guestCountMap,
+            attendanceMap
+          );
+        } catch (err) {
           console.error("Failed to send batch confirmation email:", err);
-        });
+        }
       }
     }
 

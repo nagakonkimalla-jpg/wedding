@@ -20,10 +20,10 @@ function parseTimeTo24(segment: string): { hour: number; min: number } | null {
 
 // Manual calendar time overrides for events with non-standard time formats
 const calendarTimeOverrides: Record<string, { start: string; end: string }> = {
-  pelli: { start: "080000", end: "123000" },
+  pelli: { start: "063000", end: "123000" },
 };
 
-function buildGoogleCalendarUrl(event: EventInfo): string {
+export function buildGoogleCalendarUrl(event: EventInfo): string {
   const dateStr = event.date.replace(/-/g, ""); // "20260423"
 
   const override = calendarTimeOverrides[event.slug];

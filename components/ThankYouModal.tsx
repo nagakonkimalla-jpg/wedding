@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { EventTheme } from "@/types";
 import Confetti from "./Confetti";
 
@@ -21,6 +22,7 @@ export default function ThankYouModal({
   theme,
 }: ThankYouModalProps) {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -101,6 +103,15 @@ export default function ThankYouModal({
             style={{ backgroundColor: theme.primary }}
           >
             Close
+          </button>
+
+          {/* Back to Home */}
+          <button
+            onClick={() => { onClose(); router.push("/"); }}
+            className="block mx-auto mt-3 font-body text-xs underline underline-offset-2 opacity-50 hover:opacity-80 transition-opacity"
+            style={{ color: theme.text }}
+          >
+            Back to Home
           </button>
         </div>
       </div>

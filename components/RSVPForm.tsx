@@ -147,6 +147,9 @@ export default function RSVPForm({ event }: RSVPFormProps) {
             <p className="font-body text-sm mt-2 opacity-60" style={{ color: event.theme.text }}>
               We would love to have you celebrate with us
             </p>
+            <p className="font-body text-xs mt-1.5 opacity-40" style={{ color: event.theme.text }}>
+              Your details auto-fill across events — please submit RSVP separately for each event.
+            </p>
             {alreadyRsvpd && (
               <div
                 className="inline-flex items-center gap-1.5 mt-3 px-4 py-1.5 rounded-full text-xs font-body tracking-wide"

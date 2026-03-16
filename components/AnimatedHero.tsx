@@ -41,7 +41,7 @@ export default function AnimatedHero() {
   const initialFade = mounted ? { opacity: 0 } : false;
 
   return (
-    <section ref={sectionRef} className="relative flex flex-col items-center justify-center min-h-[70vh] px-4 py-20 overflow-hidden">
+    <section ref={sectionRef} className="relative flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[70vh] px-4 py-12 sm:py-20 overflow-hidden">
       {/* Mandala backdrop — subtle rangoli behind hero text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <svg className="w-[320px] h-[320px] sm:w-[480px] sm:h-[480px] md:w-[600px] md:h-[600px] text-[#D4A017]/[0.04]" viewBox="0 0 200 200">

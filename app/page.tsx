@@ -12,12 +12,14 @@ const gradientMap: Record<string, string> = {
   mehendi: "from-emerald-300 via-green-400 to-emerald-500",
   sangeeth: "from-purple-600 via-violet-700 to-indigo-800",
   pellikuthuru: "from-red-500 via-rose-600 to-red-700",
+  pellikoduku: "from-blue-500 via-indigo-600 to-blue-700",
   pelli: "from-yellow-100 via-amber-200 to-yellow-300",
   "satyanarayana-swami-vratam": "from-orange-300 via-amber-400 to-orange-500",
 };
 
 const textColorMap: Record<string, string> = {
   sangeeth: "text-white",
+  pellikoduku: "text-white",
 };
 
 export default function HomePage() {
@@ -37,13 +39,19 @@ export default function HomePage() {
             <AnimatedSections />
 
             {/* Event Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className={`grid gap-8 ${
+              eventOrder.length === 1
+                ? "grid-cols-1 max-w-md mx-auto"
+                : eventOrder.length <= 4
+                ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            }`}>
               {eventOrder.map((slug, index) => {
                 const event = events[slug];
                 if (!event) return null;
 
                 const gradient = gradientMap[slug] || event.theme.gradient;
-                const isLight = slug !== "sangeeth";
+                const isLight = slug !== "sangeeth" && slug !== "pellikoduku";
                 const textClass = textColorMap[slug] || "text-[#3D2B1F]";
 
                 return (

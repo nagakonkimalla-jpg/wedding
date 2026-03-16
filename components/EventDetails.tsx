@@ -145,6 +145,14 @@ export default function EventDetails({ event }: EventDetailsProps) {
               >
                 {detail.value}
               </div>
+              {detail.label === "Time" && event.slug === "pelli" && (
+                <div
+                  className="text-sm font-body mt-1.5 opacity-70"
+                  style={{ color: event.theme.text }}
+                >
+                  Sumuhurtham: 9:23 AM
+                </div>
+              )}
             </div>
           ))}
         </div>
