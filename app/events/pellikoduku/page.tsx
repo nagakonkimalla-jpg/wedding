@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { events } from "@/config/events";
 import EventPage from "@/components/EventPage";
-import AmbientAudio from "@/components/AmbientAudio";
+import YouTubeAudio from "@/components/YouTubeAudio";
 
 const event = events.pellikoduku;
 
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function PellikodukuPage() {
   return (
     <>
-      <AmbientAudio audioPath="/audio/pellikuthuru.mp3" />
+      <YouTubeAudio videoId="EO3JWdSL1mk" />
       <EventPage event={event} />
     </>
   );

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { events } from "@/config/events";
 import EventPage from "@/components/EventPage";
+import YouTubeAudio from "@/components/YouTubeAudio";
 
 const event = events.pellikuthuru;
 
@@ -15,5 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function PellikuthuruPage() {
-  return <EventPage event={event} />;
+  return (
+    <>
+      <YouTubeAudio videoId="bYxeWHCAePU" />
+      <EventPage event={event} />
+    </>
+  );
 }
