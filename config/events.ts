@@ -161,9 +161,9 @@ export const events: Record<string, EventInfo> = {
     tagline: "Celebrating the groom's journey",
     date: "2026-04-22",
     time: "8:00 AM - 12:00 PM",
-    venue: "Groom's Family Residence",
-    venueAddress: "Groom's Family Residence, Atlanta, GA",
-    googleMapsUrl: "https://maps.google.com/?q=Atlanta+GA",
+    venue: "Farmhouse Dawsonville",
+    venueAddress: "6695 Dawsonville Hwy, Dawsonville, GA 30534",
+    googleMapsUrl: "https://maps.google.com/?q=6695+Dawsonville+Hwy+Dawsonville+GA+30534",
     dressCode: "Traditional Indian Attire",
     description:
       "A joyous Telugu tradition celebrating the groom as he prepares for his wedding day, surrounded by love, blessings, and the warmth of family.",
